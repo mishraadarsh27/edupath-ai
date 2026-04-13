@@ -49,7 +49,7 @@ async def get_groq_response(messages: list, student_context: dict = None):
         "Content-Type": "application/json"
     }
     
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=30.0) as client:
         try:
             response = await client.post(GROQ_API_URL, json=payload, headers=headers)
             data = response.json()
@@ -60,7 +60,7 @@ async def get_groq_response(messages: list, student_context: dict = None):
         except Exception as e:
             return f"System error calling AI: {str(e)}"
 
-@router.post("/")
+@router.post("")
 async def chat_with_ai(chat: ChatMessage):
     conn = get_db()
     cursor = conn.cursor()
