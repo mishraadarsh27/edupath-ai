@@ -22,9 +22,14 @@ def calculate_loan(payload: LoanCalcPayload):
     else:
         eligibility = "Not Eligible"
         
-    sbi_emi = (req_amount * 1.1115) / 120
-    hdfc_emi = (req_amount * 1.125) / 120
-    axis_emi = (req_amount * 1.135) / 120
+    def calc_emi(p, rate_annual, months=120):
+        if p <= 0: return 0
+        r = rate_annual / 12 / 100
+        return p * r * ((1 + r)**months) / (((1 + r)**months) - 1)
+
+    sbi_emi = calc_emi(req_amount, 11.15)
+    hdfc_emi = calc_emi(req_amount, 12.5)
+    axis_emi = calc_emi(req_amount, 13.5)
     
     return {
         "required_amount": req_amount,

@@ -85,6 +85,19 @@
             <!-- Step 3 -->
             <div class="step" id="step3">
                 <div class="mb-4">
+                    <label>English Test Score</label>
+                    <select id="englishTest">
+                        <option value="IELTS 7.0+">IELTS 7.0+ / TOEFL 100+</option>
+                        <option value="IELTS 6.5">IELTS 6.0 - 6.5</option>
+                        <option value="Below 6.0">Below IELTS 6.0</option>
+                        <option value="Not Taken Yet" selected>Not Taken Yet</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label>Work Experience (Months)</label>
+                    <input type="number" id="workExp" value="0" min="0" required>
+                </div>
+                <div class="mb-4">
                     <label>Target Timeline</label>
                     <input type="month" id="timeline" required>
                 </div>
@@ -118,7 +131,9 @@
                 target_country: document.getElementById('targetCountry').value,
                 target_course: document.getElementById('targetCourse').value,
                 budget: parseInt(document.getElementById('budgetRange').value),
-                timeline: document.getElementById('timeline').value
+                timeline: document.getElementById('timeline').value,
+                english_test: document.getElementById('englishTest').value,
+                work_exp: parseInt(document.getElementById('workExp').value)
             };
 
             const res = await api.saveProfile(payload);

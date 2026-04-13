@@ -14,15 +14,17 @@ class StudentProfile(BaseModel):
     target_course: str
     budget: int
     timeline: str
+    english_test: str = ""
+    work_exp: int = 0
 
 @router.post("/profile")
 def save_profile(profile: StudentProfile):
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute('''
-        INSERT INTO students (name, degree, gpa, target_country, target_course, budget, timeline)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    ''', (profile.name, profile.degree, profile.gpa, profile.target_country, profile.target_course, profile.budget, profile.timeline))
+        INSERT INTO students (name, degree, gpa, target_country, target_course, budget, timeline, english_test, work_exp)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (profile.name, profile.degree, profile.gpa, profile.target_country, profile.target_course, profile.budget, profile.timeline, profile.english_test, profile.work_exp))
     conn.commit()
     student_id = cursor.lastrowid
     conn.close()

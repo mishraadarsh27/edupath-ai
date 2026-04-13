@@ -22,9 +22,16 @@ def init_db():
       target_course TEXT,
       budget INTEGER,
       timeline TEXT,
+      english_test TEXT,
+      work_exp INTEGER,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     ''')
+    try:
+        cursor.execute("ALTER TABLE students ADD COLUMN english_test TEXT")
+        cursor.execute("ALTER TABLE students ADD COLUMN work_exp INTEGER")
+    except:
+        pass
 
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS saved_universities (
