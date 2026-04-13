@@ -8,175 +8,181 @@
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <style>
-        .step { display: none; opacity: 0; transition: opacity 0.4s ease; transform: translateY(10px); }
-        .step.active { display: block; opacity: 1; transform: translateY(0); }
-        .progress-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 40px; overflow: hidden; position: relative; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 33%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px var(--primary-glow); }
+        .split-layout { display: flex; min-height: 100vh; background: var(--neutral-light); }
+        .sidebar { width: 30%; background: var(--primary); color: white; padding: 50px 40px; display: flex; flex-direction: column; justify-content: center; }
+        .content { width: 70%; padding: 50px; display: flex; align-items: center; justify-content: center; }
         
-        body {
-            background-image: radial-gradient(circle at center, #1e1b4b 0%, #020617 100%);
-            display: flex; align-items: center; justify-content: center; min-height: 100vh;
-        }
+        .tracker-item { display: flex; align-items: center; gap: 15px; margin-bottom: 40px; position: relative; opacity: 0.5; transition: all 0.3s; }
+        .tracker-item::after { content: ''; position: absolute; left: 19px; top: 40px; bottom: -30px; width: 2px; background: rgba(255,255,255,0.1); }
+        .tracker-item:last-child::after { display: none; }
         
-        .onboarding-card {
-            width: 100%; 
-            max-width: 550px; 
-            padding: 50px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
+        .tracker-icon { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: bold; font-family: 'Poppins', sans-serif; z-index: 1; transition: all 0.3s; }
+        
+        .tracker-item.active { opacity: 1; }
+        .tracker-item.active .tracker-icon { background: var(--secondary); box-shadow: 0 0 15px var(--secondary-glow); color: white; }
+        .tracker-item.active h4 { color: white; }
+
+        .form-card { width: 100%; max-width: 600px; padding: 40px; background: var(--white); border-radius: 16px; box-shadow: 0 15px 50px rgba(10,31,68,0.05); }
+        .step-content { display: none; opacity: 0; transition: opacity 0.4s; }
+        .step-content.active { display: block; opacity: 1; }
     </style>
 </head>
-<body>
+<body style="background: var(--neutral-light);">
 
-    <div class="card onboarding-card fade-in">
-        <div class="text-center mb-8">
-            <div style="width: 60px; height: 60px; background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 20px auto; color: var(--primary);">
-                ✨
-            </div>
-            <h2 style="font-size: 2rem;">Initialize Identity</h2>
-            <p class="text-muted mt-2">Phase <span id="step-num" style="color:white; font-weight:bold;">1</span> of 3</p>
-        </div>
+<div class="split-layout">
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+        <h2 style="color: white; margin-bottom: 50px; font-size: 2rem;">EduPath AI</h2>
         
-        <div class="progress-bar">
-            <div class="progress-fill" id="p-bar"></div>
+        <div class="tracker-item active" id="track1">
+            <div class="tracker-icon">1</div>
+            <div><h4 style="margin:0; font-family:'Inter', sans-serif;">Personal Info</h4></div>
         </div>
-
-        <form id="onboardingForm">
-            <!-- Step 1 -->
-            <div class="step active" id="step1">
-                <div class="mb-5">
-                    <label>Full Legal Name</label>
-                    <input type="text" id="name" required placeholder="Alan Turing">
-                </div>
-                <div class="mb-5">
-                    <label>Primary Email</label>
-                    <input type="email" id="email" required placeholder="alan@enigma.com">
-                </div>
-                <div class="mb-5">
-                    <label>Current Academic Program</label>
-                    <input type="text" id="degree" required placeholder="B.Tech Computer Science">
-                </div>
-                <div class="mb-6">
-                    <label>Cumulative GPA (out of 10)</label>
-                    <input type="number" step="0.1" id="gpa" required placeholder="8.5">
-                </div>
-                <button type="button" class="btn btn-primary w-full" style="padding: 16px; font-size:1.1rem;" onclick="nextStep(2)">Proceed to Configuration</button>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="step" id="step2">
-                <div class="mb-5">
-                    <label>Target Destination</label>
-                    <select id="targetCountry" required>
-                        <option value="USA">United States</option>
-                        <option value="UK">United Kingdom</option>
-                        <option value="Canada">Canada</option>
-                        <option value="Germany">Germany</option>
-                        <option value="Australia">Australia</option>
-                    </select>
-                </div>
-                <div class="mb-5">
-                    <label>Target Discipline</label>
-                    <select id="targetCourse" required>
-                        <option value="MS CS">MS Computer Science</option>
-                        <option value="MS Data Science">MS Data Science / AI</option>
-                        <option value="MBA">Master of Business Administration (MBA)</option>
-                        <option value="Engineering Management">Engineering Management (MEM)</option>
-                    </select>
-                </div>
-                <div class="mb-6">
-                    <label>Estimated Capital Allocation (INR)</label>
-                    <div style="display:flex; align-items:center; gap:15px; margin-top:20px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px;">
-                        <input type="range" id="budgetRange" min="1000000" max="6000000" step="500000" value="3000000" oninput="document.getElementById('budgetLabel').innerText = parseInt(this.value).toLocaleString('en-IN')" style="flex-grow:1;">
-                        <span style="font-weight:bold; color:var(--secondary); font-size:1.1rem; width:120px; text-align:right;">₹<span id="budgetLabel">30,00,000</span></span>
-                    </div>
-                </div>
-                <div class="flex gap-4">
-                    <button type="button" class="btn btn-outline" style="flex:1;" onclick="nextStep(1)">Regress</button>
-                    <button type="button" class="btn btn-primary" style="flex:2;" onclick="nextStep(3)">Final Phase</button>
-                </div>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="step" id="step3">
-                <div class="mb-5">
-                    <label>Verified English Proficiency</label>
-                    <select id="englishTest">
-                        <option value="IELTS 7.0+">IELTS 7.0+ / TOEFL 100+</option>
-                        <option value="IELTS 6.5">IELTS 6.0 - 6.5</option>
-                        <option value="Below 6.0">Below IELTS 6.0</option>
-                        <option value="Not Taken Yet" selected>Pending Examination</option>
-                    </select>
-                </div>
-                <div class="mb-5">
-                    <label>Professional Tenure (Months)</label>
-                    <input type="number" id="workExp" value="0" min="0" required>
-                </div>
-                <div class="mb-6">
-                    <label>Target Enrollment Cycle</label>
-                    <input type="month" id="timeline" style="color-scheme: dark;" required>
-                </div>
-                <button type="submit" class="btn btn-primary w-full shadow-lg" style="padding:16px; font-size:1.1rem; box-shadow: 0 10px 25px rgba(6,182,212,0.3);" id="submitBtn">Finalize Profile Encoding</button>
-                <div class="mt-4 flex gap-4">
-                    <button type="button" class="btn btn-outline w-full" style="border:none; color:var(--text-muted);" onclick="nextStep(2)">← Change previous config</button>
-                </div>
-            </div>
-        </form>
+        <div class="tracker-item" id="track2">
+            <div class="tracker-icon">2</div>
+            <div><h4 style="margin:0; font-family:'Inter', sans-serif;">Academic Background</h4></div>
+        </div>
+        <div class="tracker-item" id="track3">
+            <div class="tracker-icon">3</div>
+            <div><h4 style="margin:0; font-family:'Inter', sans-serif;">Preferences</h4></div>
+        </div>
     </div>
 
-    <script>
-        function nextStep(n) {
-            document.querySelectorAll('.step').forEach(s => {
-                s.style.opacity = '0';
-                s.style.transform = 'translateY(10px)';
-                setTimeout(() => s.classList.remove('active'), 200);
-            });
-            
-            setTimeout(() => {
-                const target = document.getElementById('step' + n);
-                target.classList.add('active');
-                setTimeout(() => {
-                    target.style.opacity = '1';
-                    target.style.transform = 'translateY(0)';
-                }, 50);
-            }, 200);
+    <!-- RIGHT CONTENT -->
+    <div class="content">
+        <div class="form-card">
+            <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Let's Get Started 👋</h1>
+            <p class="text-muted" style="margin-bottom: 30px;">Complete your profile to unlock AI-driven insights.</p>
 
-            document.getElementById('step-num').innerText = n;
-            document.getElementById('p-bar').style.width = (n * 33.3) + "%";
-        }
+            <form id="onboardingForm">
+                <!-- STEP 1 -->
+                <div class="step-content active" id="step1">
+                    <div class="mb-4">
+                        <label>Full Name</label>
+                        <input type="text" id="name" required placeholder="e.g. Rahul Sharma">
+                    </div>
+                    <div class="mb-4">
+                        <label>Email Address</label>
+                        <input type="email" id="email" required placeholder="rahul@example.com">
+                    </div>
+                    <div class="mt-8 flex justify-end">
+                        <button type="button" class="btn btn-primary" onclick="goToStep(2)">Next →</button>
+                    </div>
+                </div>
 
-        document.getElementById("onboardingForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById("submitBtn");
-            btn.innerHTML = `<span class="typing-dots">Encoding Profile...</span>`;
-            btn.disabled = true;
+                <!-- STEP 2 -->
+                <div class="step-content" id="step2">
+                    <div class="mb-4">
+                        <label>Current Degree Program</label>
+                        <input type="text" id="degree" required placeholder="B.Tech Computer Science">
+                    </div>
+                    <div class="mb-4">
+                        <label>Cumulative GPA (out of 10)</label>
+                        <input type="number" step="0.1" id="gpa" required placeholder="8.5">
+                    </div>
+                    <div class="mb-4">
+                        <label>English Proficiency</label>
+                        <select id="englishTest">
+                            <option value="IELTS 7.0+">IELTS 7.0+ / TOEFL 100+</option>
+                            <option value="IELTS 6.5">IELTS 6.0 - 6.5</option>
+                            <option value="Not Taken Yet">Not Taken Yet</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label>Work Experience (Months)</label>
+                        <input type="number" id="workExp" value="0" min="0" required>
+                    </div>
+                    <div class="mt-8 flex justify-between">
+                        <button type="button" class="btn btn-outline" onclick="goToStep(1)">← Previous</button>
+                        <button type="button" class="btn btn-primary" onclick="goToStep(3)">Next →</button>
+                    </div>
+                </div>
 
-            const payload = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                degree: document.getElementById('degree').value,
-                gpa: parseFloat(document.getElementById('gpa').value),
-                target_country: document.getElementById('targetCountry').value,
-                target_course: document.getElementById('targetCourse').value,
-                budget: parseInt(document.getElementById('budgetRange').value),
-                timeline: document.getElementById('timeline').value,
-                english_test: document.getElementById('englishTest').value,
-                work_exp: parseInt(document.getElementById('workExp').value)
-            };
+                <!-- STEP 3 -->
+                <div class="step-content" id="step3">
+                    <div class="mb-4">
+                        <label>Target Country</label>
+                        <select id="targetCountry" required>
+                            <option value="USA">United States (USA)</option>
+                            <option value="UK">United Kingdom (UK)</option>
+                            <option value="Canada">Canada</option>
+                            <option value="Germany">Germany</option>
+                            <option value="Australia">Australia</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label>Target Course</label>
+                        <select id="targetCourse" required>
+                            <option value="MS CS">MS Computer Science</option>
+                            <option value="MS Data Science">MS Data Science</option>
+                            <option value="MBA">MBA</option>
+                            <option value="Engineering Management">Engineering Management</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label>Estimated Budget (INR)</label>
+                        <div class="flex items-center gap-4 mt-4">
+                            <input type="range" id="budgetRange" min="1000000" max="6000000" step="500000" value="2500000" oninput="document.getElementById('bVal').innerText=parseInt(this.value).toLocaleString('en-IN')">
+                            <b style="color:var(--primary); font-size:1.1rem; min-width:120px;">₹<span id="bVal">25,00,000</span></b>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label>Target Enrollment Month</label>
+                        <input type="month" id="timeline" required>
+                    </div>
+                    <div class="mt-8 flex justify-between">
+                        <button type="button" class="btn btn-outline" onclick="goToStep(2)">← Previous</button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary" style="box-shadow: 0 5px 15px var(--secondary-glow);">Complete Profile</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-            const res = await api.saveProfile(payload);
-            
-            if(res.student_id) {
-                auth.saveStudentId(res.student_id);
-                auth.saveProfile(payload);
-                window.location.href = "dashboard.html";
-            } else {
-                utils.showToast("Error establishing profile uplink.", "error");
-                btn.innerText = "Finalize Profile Encoding";
-                btn.disabled = false;
-            }
+<script>
+    function goToStep(n) {
+        document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
+        document.getElementById('step' + n).classList.add('active');
+        
+        document.querySelectorAll('.tracker-item').forEach((t, index) => {
+            if(index < n) t.classList.add('active');
+            else t.classList.remove('active');
         });
-    </script>
+    }
+
+    document.getElementById("onboardingForm").addEventListener("submit", async(e) => {
+        e.preventDefault();
+        const btn = document.getElementById("submitBtn");
+        btn.innerText = "Saving Profile...";
+        btn.disabled = true;
+
+        const payload = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            degree: document.getElementById('degree').value,
+            gpa: parseFloat(document.getElementById('gpa').value),
+            target_country: document.getElementById('targetCountry').value,
+            target_course: document.getElementById('targetCourse').value,
+            budget: parseInt(document.getElementById('budgetRange').value),
+            timeline: document.getElementById('timeline').value,
+            english_test: document.getElementById('englishTest').value,
+            work_exp: parseInt(document.getElementById('workExp').value)
+        };
+
+        const res = await api.saveProfile(payload);
+        
+        if(res.student_id) {
+            auth.saveStudentId(res.student_id);
+            auth.saveProfile(payload);
+            window.location.href = "dashboard.html";
+        } else {
+            alert("Error saving profile");
+            btn.innerText = "Complete Profile";
+            btn.disabled = false;
+        }
+    });
+</script>
 
 </body>
 </html>

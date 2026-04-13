@@ -10,81 +10,60 @@
     <script src="js/utils.js"></script>
     <script>auth.checkAuthAndRedirect();</script>
 </head>
-<body>
+<body style="background: var(--neutral-light);">
 
-    <nav class="navbar">
-        <div class="logo"><a href="dashboard.html" style="color: var(--text-muted); padding-right:15px; border-right: 1px solid var(--glass-border);">← Back</a> &nbsp; <b style="font-size:1.4rem;">Oracle Predictor 🔮</b></div>
+    <nav class="navbar" style="border-bottom: 2px solid var(--neutral-light);">
+        <div class="logo"><a href="dashboard.html" style="color:var(--neutral-dark);">← Back to Dashboard</a></div>
+        <div class="nav-links">
+            <span style="font-family:'Poppins', sans-serif; color:var(--primary); font-size:1.2rem;">Admission Predictor</span>
+        </div>
     </nav>
 
-    <div class="container py-12" style="margin-top: 50px;">
-        <div class="grid grid-cols-2 gap-6">
+    <div class="container py-12" style="margin-top: 100px;">
+        <h1 style="color: var(--primary); text-align:center; font-size: 2.2rem; margin-bottom: 40px;">Predict Your Admission Chances</h1>
+        
+        <div class="grid grid-cols-2 gap-6" style="align-items:start;">
             
-            <div class="card">
-                <h3 style="font-size:1.8rem; margin-bottom: 20px;">Profile Analytics</h3>
-                <p class="text-muted mb-4">Adjust your parameters to see how they impact your algorithmic admission probability in real-time.</p>
-                
-                <form id="predictForm" class="mt-8">
-                    <div class="mb-4" style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                            <label>Cumulative GPA</label>
-                            <span id="gpaVal" style="color:var(--secondary); font-weight:bold; font-size:1.1rem;">8.5</span>
-                        </div>
+            <div class="card" style="background:var(--white);">
+                <form id="predictForm">
+                    <div class="mb-4">
+                        <label style="display:flex; justify-content:space-between;"><span>Cumulative GPA</span> <b id="gpaVal" style="color:var(--secondary);">8.5</b></label>
                         <input type="range" id="gpa" min="5" max="10" step="0.1" value="8.5" oninput="document.getElementById('gpaVal').innerText=this.value" required>
                     </div>
-
-                    <div class="mb-4" style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                            <label>English Proficiency Band</label>
-                            <span id="ieltsVal" style="color:var(--secondary); font-weight:bold; font-size:1.1rem;">7.0</span>
-                        </div>
+                    
+                    <div class="mb-4 mt-6">
+                        <label style="display:flex; justify-content:space-between;"><span>English Test Score (IELTS/TOEFL Band)</span> <b id="ieltsVal" style="color:var(--secondary);">7.0</b></label>
                         <input type="range" id="ielts" min="5" max="9" step="0.5" value="7.0" oninput="document.getElementById('ieltsVal').innerText=this.value" required>
                     </div>
-
-                    <div class="mb-4" style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                            <label>Professional Experience (Years)</label>
-                            <span id="workVal" style="color:var(--secondary); font-weight:bold; font-size:1.1rem;">2</span>
-                        </div>
+                    
+                    <div class="mb-4 mt-6">
+                        <label style="display:flex; justify-content:space-between;"><span>Work Experience (Years)</span> <b id="workVal" style="color:var(--secondary);">2</b></label>
                         <input type="range" id="work" min="0" max="10" step="1" value="2" oninput="document.getElementById('workVal').innerText=this.value" required>
                     </div>
 
-                    <div class="mb-4" style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                            <label>SOP Strength (1-5)</label>
-                            <span id="sopVal" style="color:var(--secondary); font-weight:bold; font-size:1.1rem;">4</span>
-                        </div>
-                        <input type="range" id="sop" min="1" max="5" step="1" value="4" oninput="document.getElementById('sopVal').innerText=this.value" required>
+                    <div class="mb-4 mt-6">
+                        <label style="display:flex; justify-content:space-between;"><span>Statement of Purpose (SOP) Strength</span> <b id="sopVal" style="color:var(--secondary);">4/5</b></label>
+                        <input type="range" id="sop" min="1" max="5" step="1" value="4" oninput="document.getElementById('sopVal').innerText=this.value+'/5'" required>
                     </div>
-                    <button type="submit" class="btn btn-primary w-full mt-4" style="font-size:1.1rem; padding:16px;">Initiate AI Prediction</button>
+
+                    <button type="submit" class="btn btn-primary w-full mt-8" style="padding:16px; font-size:1.1rem;">Predict Chances</button>
                 </form>
             </div>
 
-            <div class="card" id="resultsCard" style="display:none; flex-direction:column; justify-content:center; text-align:center; position:relative;">
-                <div style="position:absolute; top:30px; left:30px; padding: 5px 12px; background: rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.3); border-radius:12px; color:var(--primary); font-size:0.8rem; text-transform:uppercase; font-weight:bold;">
-                    AI Forecast Output
-                </div>
+            <div class="card" id="resultsCard" style="display:none; flex-direction:column; text-align:center; align-items:center; background:linear-gradient(135deg, var(--white) 0%, var(--neutral-light) 100%);">
+                <h3 style="color:var(--neutral-dark); margin-bottom:30px;">Algorithmic Probability</h3>
                 
-                <h3 style="margin-bottom: 40px; font-size: 2rem; margin-top:20px;">Admission Probability</h3>
-                
-                <div style="position:relative; width: 220px; height: 220px; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-                    <div style="position:absolute; width:100%; height:100%; border-radius:50%; border: 4px dashed rgba(255,255,255,0.1); animation: spin 20s linear infinite;"></div>
-                    
-                    <div style="width: 180px; height: 180px; border-radius: 50%; box-shadow: 0 0 50px rgba(0,0,0,0.5) inset; background: rgba(0,0,0,0.3); border: 8px solid var(--primary); display: flex; flex-direction:column; align-items: center; justify-content: center; z-index:10;" id="chanceCircle">
-                        <span style="font-size: 3.5rem; font-weight: bold; background: linear-gradient(135deg, #fff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"><span id="chance">--</span><span style="font-size:1.5rem">%</span></span>
-                    </div>
+                <div style="width:180px; height:180px; border-radius:50%; background:var(--white); box-shadow:0 15px 35px rgba(0,0,0,0.05); display:flex; align-items:center; justify-content:center; border: 8px solid var(--accent2);" id="chanceCircle">
+                    <span style="font-size:3.5rem; font-weight:bold; font-family:'Space Grotesk', sans-serif; color:var(--primary);"><span id="chance">--</span><span style="font-size:1.5rem">%</span></span>
                 </div>
 
-                <div style="margin-top: 50px; padding: 25px; background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 16px; text-align:left;">
-                    <h4 style="color:var(--primary); margin-bottom:10px; display:flex; align-items:center; gap:8px;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                        Strategic AI Recommendation
+                <div style="margin-top:40px; background:rgba(10,31,68,0.03); border:1px solid rgba(10,31,68,0.05); padding:20px; border-radius:12px; text-align:left; width:100%;">
+                    <h4 style="margin-bottom:10px; color:var(--primary); display:flex; align-items:center; gap:8px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--secondary)" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        Oracle Insights
                     </h4>
-                    <p style="color:#e2e8f0; line-height:1.6;" id="tip">--</p>
+                    <p style="color:var(--neutral-dark); font-size:0.95rem; line-height:1.5;" id="tip">--</p>
                 </div>
-                
-                <style>
-                    @keyframes spin { 100% { transform: rotate(360deg); } }
-                </style>
             </div>
 
         </div>
@@ -101,6 +80,10 @@
 
         document.getElementById("predictForm").addEventListener("submit", async(e) => {
             e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const original = btn.innerText;
+            btn.innerText = 'Calculating...';
+            
             const payload = {
                 gpa: parseFloat(document.getElementById("gpa").value),
                 english_score: parseFloat(document.getElementById("ielts").value),
@@ -108,45 +91,25 @@
                 sop_score: parseFloat(document.getElementById("sop").value)
             };
 
-            const rc = document.getElementById('resultsCard');
-            rc.style.display = 'flex';
-            rc.style.opacity = '0';
-            setTimeout(() => { rc.style.transition = 'opacity 0.5s'; rc.style.opacity = '1'; }, 50);
-            
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerText;
-            btn.innerText = "Analyzing...";
-            btn.disabled = true;
-
             const res = await api.predictAdmission(payload);
             
-            btn.innerText = originalText;
-            btn.disabled = false;
-
+            const rc = document.getElementById('resultsCard');
+            rc.style.display = 'flex';
+            rc.classList.add('fade-in');
+            
             const circle = document.getElementById("chanceCircle");
             document.getElementById("chance").innerText = res.probability;
             
-            // Re-trigger animation
-            circle.style.transform = 'scale(0.8)';
-            setTimeout(() => {
-                circle.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                circle.style.transform = 'scale(1)';
-            }, 50);
-            
             if(res.probability >= 70) {
-                circle.style.borderColor = 'var(--success)';
-                circle.style.boxShadow = '0 0 30px rgba(16,185,129,0.3)';
-            }
-            else if(res.probability >= 40) {
-                circle.style.borderColor = 'var(--warning)';
-                circle.style.boxShadow = '0 0 30px rgba(245,158,11,0.3)';
-            }
-            else {
-                circle.style.borderColor = 'var(--danger)';
-                circle.style.boxShadow = '0 0 30px rgba(239,68,68,0.3)';
+                circle.style.borderColor = 'var(--accent2)';
+            } else if(res.probability >= 40) {
+                circle.style.borderColor = 'var(--accent1)';
+            } else {
+                circle.style.borderColor = 'var(--secondary)';
             }
 
             document.getElementById("tip").innerText = res.tips;
+            btn.innerText = original;
         });
     </script>
 </body>

@@ -6,116 +6,127 @@
     <title>EduPath AI - Start Your Study Abroad Journey</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="js/auth.js" defer></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo"><h2>EduPath AI</h2></div>
+        <div class="nav-links main-nav">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="onboarding.html" class="btn btn-outline" style="padding: 10px 24px; border-color:var(--primary); color:var(--primary);">Login</a>
+        </div>
+    </nav>
+
+    <!-- DESIGN 1: LANDING PAGE HERO -->
+    <section class="hero" style="min-height: 100vh; display: flex; align-items: center; padding-top: 80px; position:relative; background: linear-gradient(135deg, rgba(10,31,68,0.03) 0%, rgba(107,203,119,0.05) 100%);">
+        <div class="container grid grid-cols-2 gap-6 items-center">
+            <!-- Left Side -->
+            <div>
+                <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 20px; color: var(--primary);">Your AI-Powered<br>Study Abroad Companion</h1>
+                <p style="font-size: 1.125rem; color: var(--neutral-dark); margin-bottom: 40px; opacity: 0.8;">From university selection to education loan — we guide every step</p>
+                <a href="onboarding.html" class="btn btn-primary" style="font-size: 1.1rem; padding: 16px 32px;" id="startBtn">Start Your Journey →</a>
+                
+                <div style="margin-top: 40px; display: flex; gap: 20px; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; color: var(--primary); font-weight: 600;">
+                    <span style="display:flex; align-items:center; gap:8px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> AI-Powered</span>
+                    <span style="display:flex; align-items:center; gap:8px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> Trusted by 10,000+ Students</span>
+                    <span style="display:flex; align-items:center; gap:8px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> 95% Success Rate</span>
+                </div>
+            </div>
+            <!-- Right Side (Isometric Illustration mock) -->
+            <div style="position:relative; height: 500px; display:flex; align-items:center; justify-content:center;">
+                <!-- Abstract Representation of 3D Isometric Student Laptop -->
+                <div style="width: 350px; height: 350px; background: rgba(107,203,119,0.1); border-radius: 50%; position:absolute; filter:blur(50px);"></div>
+                <div style="width: 250px; height: 250px; background: rgba(10,31,68,0.1); border-radius: 50%; position:absolute; top:0; right:0; filter:blur(40px);"></div>
+                
+                <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1470&auto=format&fit=crop" style="width:100%; height:auto; border-radius:16px; box-shadow: 0 20px 50px rgba(10,31,68,0.15);" alt="Student at laptop">
+                
+                <!-- Floating Glass Cards -->
+                <div class="glass" style="position:absolute; bottom:20px; left:-20px; padding:15px; border-radius:12px; display:flex; align-items:center; gap:10px;">
+                    <div style="background:var(--accent2); width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;">95%</div>
+                    <div><b style="color:var(--primary);">Success Rate</b><br><span style="font-size:0.8rem;">Visa Approvals</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DESIGN 2: FEATURES SECTION -->
+    <section id="features" class="py-12" style="background: var(--neutral-light);">
+        <div class="container text-center">
+            <h2 class="mb-4" style="font-size: 2.5rem; color: var(--primary);">Intelligent Ecosystem</h2>
+            <div class="grid grid-cols-2 gap-6 mt-8" style="max-width: 800px; margin: 2rem auto;">
+                
+                <div class="card" style="background: linear-gradient(135deg, #534AB7 0%, #AFA9EC 100%); color: white; text-align: left; padding: 40px;">
+                    <div style="font-size:3rem; margin-bottom:15px;">🧭</div>
+                    <h3 style="color:white; font-size:1.5rem;">Career Navigator</h3>
+                    <p style="opacity:0.9; margin-top:10px;">Discover universities that match your profile.</p>
+                </div>
+
+                <div class="card" style="background: linear-gradient(135deg, #FFD93D 0%, #FF6B6B 100%); text-align: left; padding: 40px;">
+                    <div style="font-size:3rem; margin-bottom:15px;">📈</div>
+                    <h3 style="color:var(--primary); font-size:1.5rem;">ROI Calculator</h3>
+                    <p style="color:rgba(10,31,68,0.8); margin-top:10px;">Calculate your return on investment before deciding.</p>
+                </div>
+
+                <div class="card" style="background: linear-gradient(135deg, #6BCB77 0%, #5DCAA5 100%); color: white; text-align: left; padding: 40px;">
+                    <div style="font-size:3rem; margin-bottom:15px;">🤖</div>
+                    <h3 style="color:white; font-size:1.5rem;">AI Mentor</h3>
+                    <p style="opacity:0.9; margin-top:10px;">Chat with your personal study counselor 24/7.</p>
+                </div>
+
+                <div class="card" style="background: linear-gradient(135deg, #FFD93D 0%, #EF9F27 100%); text-align: left; padding: 40px;">
+                    <div style="font-size:3rem; margin-bottom:15px;">🏦</div>
+                    <h3 style="color:var(--primary); font-size:1.5rem;">Loan Estimator</h3>
+                    <p style="color:rgba(10,31,68,0.8); margin-top:10px;">Check eligibility and calculate EMI instantly.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- DESIGN 3: HOW IT WORKS TIMELINE -->
+    <section id="how-it-works" class="py-12" style="background: var(--white);">
+        <div class="container text-center">
+            <h2 class="mb-4" style="font-size: 2.5rem; color: var(--primary);">How It Works</h2>
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; position:relative; margin-top: 60px;">
+                <!-- Dotted lines -->
+                <div style="position:absolute; top:60px; left:15%; right:15%; height:2px; border-top: 2px dashed #E2E8F0; z-index:0;"></div>
+                
+                <div style="width:30%; position:relative; z-index:1; background:var(--white); padding:0 20px;">
+                    <div style="background: var(--primary); width:120px; height:120px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto; font-size:3rem; color:var(--white); box-shadow: 0 10px 20px rgba(10,31,68,0.2);">📝
+                        <div style="position:absolute; top:-10px; right:70px; background:var(--secondary); color:white; width:30px; height:30px; border-radius:50%; font-weight:bold; display:flex; align-items:center; justify-content:center; font-family:'Poppins', sans-serif;">1</div>
+                    </div>
+                    <h3 style="margin-top:20px; font-size:1.2rem;">Setup Profile</h3>
+                    <p class="text-muted mt-2">Tell us about your background, budget, and target.</p>
+                </div>
+
+                <div style="width:30%; position:relative; z-index:1; background:var(--white); padding:0 20px;">
+                    <div style="background: var(--accent2); width:120px; height:120px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto; font-size:3rem; color:var(--white); box-shadow: 0 10px 20px rgba(107,203,119,0.3);">🧠
+                        <div style="position:absolute; top:-10px; right:70px; background:var(--primary); color:white; width:30px; height:30px; border-radius:50%; font-weight:bold; display:flex; align-items:center; justify-content:center; font-family:'Poppins', sans-serif;">2</div>
+                    </div>
+                    <h3 style="margin-top:20px; font-size:1.2rem;">Get Recommendations</h3>
+                    <p class="text-muted mt-2">Our AI provides perfect matches and calculates ROI.</p>
+                </div>
+
+                <div style="width:30%; position:relative; z-index:1; background:var(--white); padding:0 20px;">
+                    <div style="background: var(--accent1); width:120px; height:120px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto; font-size:3rem; color:var(--white); box-shadow: 0 10px 20px rgba(255,217,61,0.3);">🏦
+                        <div style="position:absolute; top:-10px; right:70px; background:var(--secondary); color:white; width:30px; height:30px; border-radius:50%; font-weight:bold; display:flex; align-items:center; justify-content:center; font-family:'Poppins', sans-serif;">3</div>
+                    </div>
+                    <h3 style="margin-top:20px; font-size:1.2rem;">Apply for Loan</h3>
+                    <p class="text-muted mt-2">Finalize your funding effortlessly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const nav = document.querySelector(".navbar");
-            window.addEventListener("scroll", () => {
-                if (window.scrollY > 50) nav.style.background = "rgba(2, 6, 23, 0.9)";
-                else nav.style.background = "rgba(2, 6, 23, 0.7)";
-            });
-
             if(auth.isLoggedIn()) {
                 const startBtn = document.getElementById("startBtn");
                 startBtn.innerText = "Go to Dashboard →";
                 startBtn.href = "dashboard.html";
             }
-
-            // Animate on scroll
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if(entry.isIntersecting) {
-                        entry.target.classList.add('fade-in');
-                    }
-                });
-            });
-            document.querySelectorAll('.card').forEach(el => observer.observe(el));
         });
     </script>
-</head>
-<body>
-
-    <nav class="navbar">
-        <div class="logo"><h2>EduPath AI <span style="font-size:1.2rem">🚀</span></h2></div>
-        <div class="hamburger" onclick="document.querySelector('.main-nav').classList.toggle('show')">☰</div>
-        <div class="nav-links main-nav">
-            <a href="#features">Capabilities</a>
-            <a href="#how-it-works">Ecosystem</a>
-            <a href="onboarding.html" class="btn btn-outline" style="padding: 10px 24px;">Sign In</a>
-        </div>
-    </nav>
-
-    <section class="hero">
-        <div class="container fade-in">
-            <div style="display:inline-block; padding: 8px 16px; background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 20px; color: #a78bfa; font-weight:600; margin-bottom: 24px; font-size:0.9rem;">
-                ✨ The Next Generation of Study Abroad
-            </div>
-            <h1>Your Universal AI<br>Study Companion</h1>
-            <p>Experience an intelligent ecosystem that guides you effortlessly from university discovery to securing your education loan. Powered by AI.</p>
-            <div class="flex gap-4" style="justify-content:center;">
-                <a href="onboarding.html" id="startBtn" class="btn btn-primary" style="font-size: 1.1rem; padding: 16px 36px;">Launch Journey</a>
-                <a href="#features" class="btn btn-outline" style="font-size: 1.1rem; padding: 16px 36px; border-color: rgba(255,255,255,0.2); color:white;">Explore Features</a>
-            </div>
-        </div>
-    </section>
-
-    <section id="features" class="py-12" style="position:relative;">
-        <div class="container text-center">
-            <h2 class="mb-4" style="font-size: 2.8rem;">An Intelligent Ecosystem</h2>
-            <p class="text-muted" style="max-width:600px; margin:0 auto 40px auto; font-size:1.1rem;">Everything you realistically need to make data-driven decisions about your academic future.</p>
-            <div class="grid grid-cols-4 gap-6 mt-8">
-                <div class="card" style="animation-delay: 0.1s;">
-                    <div class="feature-icon">🧭</div>
-                    <h3>Smart Navigator</h3>
-                    <p class="text-muted mt-4">Discover hyper-personalized universities that match your profile using AI logic.</p>
-                </div>
-                <div class="card" style="animation-delay: 0.2s;">
-                    <div class="feature-icon">📈</div>
-                    <h3>ROI Projection</h3>
-                    <p class="text-muted mt-4">Predict 10-year financial returns before making multi-million rupee decisions.</p>
-                </div>
-                <div class="card" style="animation-delay: 0.3s;">
-                    <div class="feature-icon">🔮</div>
-                    <h3>Admission Oracle</h3>
-                    <p class="text-muted mt-4">Calculate exact admission probabilities based on complex multidimensional data.</p>
-                </div>
-                <div class="card" style="animation-delay: 0.4s;">
-                    <div class="feature-icon">🏦</div>
-                    <h3>Financing Hub</h3>
-                    <p class="text-muted mt-4">Instantly evaluate loan eligibility and compare real-time bank EMI offers.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="how-it-works" class="py-12" style="margin-top: 50px; background: linear-gradient(180deg, transparent, rgba(15,23,42,0.8));">
-        <div class="container text-center">
-            <h2 class="mb-4" style="font-size: 2.8rem;">Seamless Execution</h2>
-            <div class="grid grid-cols-3 gap-6 mt-8">
-                <div class="card">
-                    <div style="width: 50px; height: 50px; border-radius: 15px; background: linear-gradient(135deg, var(--primary), #a78bfa); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-weight: bold; font-size: 1.5rem; box-shadow: 0 10px 20px var(--primary-glow);">1</div>
-                    <h3>Define Trajectory</h3>
-                    <p class="text-muted mt-4">Input your academic stats, timeline, and financial constraints into our secure platform.</p>
-                </div>
-                <div class="card">
-                    <div style="width: 50px; height: 50px; border-radius: 15px; background: linear-gradient(135deg, var(--secondary), #22d3ee); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-weight: bold; font-size: 1.5rem; box-shadow: 0 10px 20px var(--secondary-glow);">2</div>
-                    <h3>AI Processing</h3>
-                    <p class="text-muted mt-4">Our neural engines match you with ideal institutions and calculate exact ROI projections.</p>
-                </div>
-                <div class="card">
-                    <div style="width: 50px; height: 50px; border-radius: 15px; background: linear-gradient(135deg, var(--success), #34d399); color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-weight: bold; font-size: 1.5rem; box-shadow: 0 10px 20px rgba(16,185,129,0.3);">3</div>
-                    <h3>Secure Funding</h3>
-                    <p class="text-muted mt-4">Apply for zero-friction education loans right from your dashboard.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer style="border-top: 1px solid var(--glass-border); text-align: center; padding: 50px 20px; margin-top: 50px; background: rgba(2,6,23,0.9);">
-        <div class="container">
-            <h2 style="font-size:1.5rem; margin-bottom:10px;">EduPath AI <span style="font-size:1.2rem">✨</span></h2>
-            <p style="color: var(--text-muted);">Empowering the next generation of global scholars.</p>
-        </div>
-    </footer>
-
 </body>
 </html>

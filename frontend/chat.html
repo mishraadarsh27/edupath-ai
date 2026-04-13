@@ -10,61 +10,96 @@
     <script src="js/utils.js"></script>
     <script>auth.checkAuthAndRedirect();</script>
     <style>
-        /* Specific chat tweaks for dark mode */
-        .bubble.ai {
-            background: rgba(30, 41, 59, 0.8);
-            border-color: rgba(255,255,255,0.05);
-        }
-        .bubble.user {
-            background: linear-gradient(135deg, var(--primary), #6366f1);
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-        }
-        #chatInput {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-        }
-        #chatInput:focus {
-            background: rgba(0,0,0,0.5);
-            border-color: var(--primary);
-        }
+        .split-chat { display:flex; height:calc(100vh - 80px); margin-top:80px; }
+        .chat-panel { width: 65%; display:flex; flex-direction:column; background: linear-gradient(180deg, #FFFFFF 0%, #E6F1FB 100%); position:relative; }
+        .sidebar-right { width: 35%; background: var(--white); border-left: 1px solid rgba(10,31,68,0.05); padding: 40px 30px; overflow-y:auto;}
+        
+        .bubble { max-width:75%; padding:14px 20px; border-radius:16px; margin-bottom:15px; font-size:0.95rem; line-height:1.5; box-shadow:0 4px 15px rgba(0,0,0,0.05); position:relative;}
+        .bubble.user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .bubble.ai { background: var(--white); color: var(--neutral-dark); align-self: flex-start; border-bottom-left-radius: 4px; }
+        
+        .ai-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, var(--secondary), var(--accent2)); display:flex; align-items:center; justify-content:center; color:white; font-size:0.8rem; font-weight:bold; position:absolute; left:-40px; top:0;}
+        
+        .input-bar { padding: 20px; background: transparent; display:flex; flex-direction:column; }
+        .input-wrapper { display:flex; background:var(--white); border-radius:24px; padding:8px 15px; box-shadow:0 10px 30px rgba(10,31,68,0.08); align-items:center;}
+        .input-wrapper input { border:none; background:transparent; padding:10px; flex-grow:1; box-shadow:none; margin:0;}
+        .input-wrapper input:focus { box-shadow:none; }
+        .send-btn { background: linear-gradient(135deg, var(--secondary), #E85A5A); width:40px; height:40px; border-radius:50%; border:none; color:white; display:flex; align-items:center; justify-content:center; cursor:pointer;}
+        
+        .quick-chips { display:flex; gap:10px; margin-bottom:15px; overflow-x:auto; padding-bottom:5px;}
+        .q-chip { background:var(--white); border:1px solid rgba(10,31,68,0.1); padding:8px 16px; border-radius:20px; font-size:0.85rem; color:var(--primary); cursor:pointer; white-space:nowrap; transition:all 0.2s;}
+        .q-chip:hover { border-color:var(--secondary); color:var(--secondary); }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="logo"><a href="dashboard.html" style="color: var(--text-muted); padding-right:15px; border-right: 1px solid var(--glass-border);">← Back</a> &nbsp; <b style="font-size:1.4rem;">EduPath AI <span style="font-size:1.2rem">🤖</span></b></div>
-        <div style="display:flex; align-items:center; gap:10px;">
-            <div style="width:10px; height:10px; border-radius:50%; background:var(--success); box-shadow: 0 0 10px var(--success);"></div>
-            <span style="font-size:0.9rem; font-weight:600; color:var(--text-muted);">Systems Online</span>
-        </div>
+        <div class="logo"><a href="dashboard.html" style="color:var(--primary);">← Dashboard</a></div>
+        <div><h2 style="font-size:1.2rem;">AI Mentor</h2></div>
     </nav>
 
-    <div class="container chat-container" style="margin-top: 100px; max-width:900px;">
+    <div class="split-chat">
         
-        <div class="card" style="flex-grow: 1; display:flex; flex-direction:column; padding:0; overflow:hidden;">
-            <div class="chat-messages" id="chatBox">
-                <div class="text-center text-muted" style="margin-bottom:20px; font-size:0.85em; text-transform:uppercase; letter-spacing:1px; border-bottom: 1px solid var(--glass-border); padding-bottom:10px;">Secure Chat Session Initialized</div>
+        <!-- LEFT CHAT PANEL -->
+        <div class="chat-panel">
+            <div class="chat-messages" id="chatBox" style="flex-grow:1; padding:30px 40px 30px 60px; display:flex; flex-direction:column;">
                 
-                <div class="bubble ai fade-in">
-                    <div style="font-size:0.8rem; color:var(--secondary); margin-bottom:5px; font-weight:600;">EduPath AI Core</div>
-                    Greetings, architect of the future. I am your personal AI mentor. Whether you need deep analysis on global universities, granular cost breakdowns, or strategic visa guidance, I am ready. What objective shall we tackle today?
+                <div style="align-self:flex-start; position:relative;" class="bubble ai fade-in">
+                    <div class="ai-avatar">AI</div>
+                    Hello! I'm your personal study abroad counselor at EduPath AI. I can review your profile, recommend universities, or help calculate your budget requirements. What can I assist you with today?
+                </div>
+
+            </div>
+
+            <div class="input-bar">
+                <div class="quick-chips" id="suggestedChips">
+                    <div class="q-chip" onclick="sendMsg('Show me universities matching my profile')">Show me universities</div>
+                    <div class="q-chip" onclick="sendMsg('Can we calculate my overall ROI?')">Calculate ROI</div>
+                    <div class="q-chip" onclick="sendMsg('What are the loan options available for my budget?')">Loan options</div>
+                </div>
+
+                <form class="input-wrapper" id="chatForm">
+                    <input type="text" id="chatInput" placeholder="Ask me anything about studying abroad..." autocomplete="off" required>
+                    <button type="submit" class="send-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDEBAR -->
+        <div class="sidebar-right">
+            <h3 style="margin-bottom:25px; font-size:1.3rem;">Student Profile</h3>
+            
+            <div style="display:flex; align-items:center; gap:15px; margin-bottom:30px;">
+                <div style="width:60px; height:60px; border-radius:50%; background:var(--neutral-light); display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold; color:var(--primary);" id="avInitials">RS</div>
+                <div>
+                    <h4 id="sideName" style="font-size:1.1rem; margin:0;">Student</h4>
+                    <p style="color:var(--accent2); font-size:0.85rem; font-weight:600; margin:0;">Active AI Tracking</p>
                 </div>
             </div>
 
-            <div style="padding: 15px 20px; background:rgba(0,0,0,0.2); display:flex; gap:10px; overflow-x:auto; border-top:1px solid var(--glass-border);" id="suggestedChips">
-                <button class="btn btn-outline" style="padding:8px 18px; white-space:nowrap; border-radius:20px; font-size:0.9em; border-color:rgba(255,255,255,0.1); color:var(--text-muted);" onclick="sendMsg('Which country is optimal for MS in CS considering ROI? 🎓')">Optimal country for MS CS? 🎓</button>
-                <button class="btn btn-outline" style="padding:8px 18px; white-space:nowrap; border-radius:20px; font-size:0.9em; border-color:rgba(255,255,255,0.1); color:var(--text-muted);" onclick="sendMsg('Break down the education loan process for Indian students. 💰')">Education loan process? 💰</button>
-                <button class="btn btn-outline" style="padding:8px 18px; white-space:nowrap; border-radius:20px; font-size:0.9em; border-color:rgba(255,255,255,0.1); color:var(--text-muted);" onclick="sendMsg('What exact profile metrics do Tier 1 US universities look for? 📊')">Tier 1 US Profile Metrics? 📊</button>
+            <div style="background:var(--neutral-light); padding:20px; border-radius:12px; margin-bottom:30px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:10px;">
+                    <span style="color:var(--neutral-dark); font-size:0.9rem;">Budget</span>
+                    <strong style="color:var(--primary);" id="sideBudg">--</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:10px;">
+                    <span style="color:var(--neutral-dark); font-size:0.9rem;">Target</span>
+                    <strong style="color:var(--primary);" id="sideTrg">--</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
+                    <span style="color:var(--neutral-dark);">CGPA</span>
+                    <strong style="color:var(--primary);" id="sideGpa">--</strong>
+                </div>
             </div>
 
-            <form class="chat-input-area" id="chatForm" style="border-radius:0; margin-bottom:0; border:none; border-top: 1px solid var(--glass-border); background:rgba(15,23,42,0.8);">
-                <input type="text" id="chatInput" placeholder="Initialize inquiry..." style="margin:0; border-radius:12px; padding:15px 20px; flex-grow:1; font-size:1.05rem;" autocomplete="off" required>
-                <button type="submit" class="btn btn-primary" style="border-radius:12px; padding:10px 30px; font-size:1.05rem;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                </button>
-            </form>
+            <h4 style="margin-bottom:15px; color:var(--neutral-dark);">Quick Actions</h4>
+            <a href="navigator.html" class="btn btn-outline" style="width:100%; justify-content:flex-start; margin-bottom:10px; border-color:rgba(10,31,68,0.1); border-radius:12px; padding:12px 20px;">🧭 Recommend Universities</a>
+            <a href="roi.html" class="btn btn-outline" style="width:100%; justify-content:flex-start; margin-bottom:10px; border-color:rgba(10,31,68,0.1); border-radius:12px; padding:12px 20px;">📈 Calculate ROI</a>
+            <a href="loan.html" class="btn btn-outline" style="width:100%; justify-content:flex-start; margin-bottom:10px; border-color:rgba(10,31,68,0.1); border-radius:12px; padding:12px 20px;">🏦 Check Loan Eligibility</a>
         </div>
+
     </div>
 
     <script>
@@ -72,15 +107,24 @@
         const studentId = auth.getStudentId();
         const chatBox = document.getElementById("chatBox");
 
+        document.addEventListener("DOMContentLoaded", () => {
+            const p = auth.getProfile();
+            if(p) {
+                document.getElementById("avInitials").innerText = p.name ? p.name.substring(0,2).toUpperCase() : 'ST';
+                document.getElementById("sideName").innerText = p.name;
+                document.getElementById("sideBudg").innerText = utils.formatCurrency(p.budget);
+                document.getElementById("sideTrg").innerText = p.target_country;
+                document.getElementById("sideGpa").innerText = p.gpa;
+            }
+        });
+
         async function loadHistory() {
             const res = await api.getChatHistory(studentId);
             if(res.history && res.history.length > 0) {
-                chatBox.innerHTML = '';
                 res.history.forEach(msg => {
                     appendBubble(msg.message, msg.role);
                     chatHistory.push({role: msg.role, message: msg.message});
                 });
-                scrollToBottom();
             }
         }
 
@@ -89,23 +133,18 @@
             div.className = `bubble ${role === 'user' ? 'user' : 'ai'} fade-in`;
             
             if(role === 'ai') {
-                div.innerHTML = `<div style="font-size:0.8rem; color:var(--secondary); margin-bottom:5px; font-weight:600;">EduPath AI Core</div>` + text.replace(/\n/g, '<br>');
+                div.innerHTML = `<div class="ai-avatar">AI</div>` + text.replace(/\n/g, '<br>');
             } else {
                 div.innerHTML = text.replace(/\n/g, '<br>');
             }
             
             chatBox.appendChild(div);
-            scrollToBottom();
-        }
-
-        function scrollToBottom() {
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
         window.sendMsg = function(msg) {
             document.getElementById("chatInput").value = msg;
-            document.getElementById("chatForm").dispatchEvent(new Event("submit"));
-            document.getElementById("suggestedChips").style.display = 'none';
+            document.getElementById("chatForm").dispatchEvent(new Event("submit", {cancelable: true, bubbles: true}));
         }
 
         document.getElementById("chatForm").addEventListener("submit", async(e) => {
@@ -116,30 +155,22 @@
 
             input.value = "";
             appendBubble(msg, "user");
-            
             document.getElementById("suggestedChips").style.display = 'none';
 
             const typing = document.createElement("div");
             typing.className = "bubble ai fade-in";
             typing.id = "typingInd";
-            typing.innerHTML = `<div style="font-size:0.8rem; color:var(--secondary); margin-bottom:5px; font-weight:600;">EduPath AI Core</div><span style="opacity:0.7; font-style:italic; display:flex; align-items:center; gap:8px;">Processing logic <span class="typing-dots">...</span></span>`;
+            typing.innerHTML = `<div class="ai-avatar">AI</div><span style="display:flex; gap:5px; padding:5px 0;">Wait...<span class="typing-dots"></span></span>`;
             chatBox.appendChild(typing);
-            scrollToBottom();
+            chatBox.scrollTop = chatBox.scrollHeight;
 
-            const res = await api.chat({
-                message: msg,
-                student_id: parseInt(studentId),
-                chat_history: chatHistory
-            });
-
+            const res = await api.chat({ message: msg, student_id: parseInt(studentId), chat_history: chatHistory });
             document.getElementById("typingInd").remove();
 
             if(res.message) {
                 appendBubble(res.message, "ai");
                 chatHistory.push({role: "user", message: msg});
                 chatHistory.push({role: "assistant", message: res.message});
-            } else {
-                appendBubble("Error in neural routing. Retrying connection...", "ai");
             }
         });
 

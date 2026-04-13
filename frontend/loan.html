@@ -10,59 +10,67 @@
     <script src="js/utils.js"></script>
     <script>auth.checkAuthAndRedirect();</script>
 </head>
-<body>
+<body style="background: var(--neutral-light);">
 
-    <nav class="navbar">
-        <div class="logo"><a href="dashboard.html" style="color: var(--text-muted); padding-right:15px; border-right: 1px solid var(--glass-border);">← Back</a> &nbsp; <b style="font-size:1.4rem;">Loan Estimator 🏦</b></div>
+    <nav class="navbar" style="border-bottom:none; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+        <div class="logo"><a href="dashboard.html">← Back</a></div>
     </nav>
 
-    <div class="container py-12" style="margin-top: 50px;">
+    <div style="background: var(--primary); padding-top:120px; padding-bottom:60px; color:white; text-align:center;">
+        <h1 style="color:white; font-size:2.8rem; margin-bottom:10px;">Check Your Loan Eligibility</h1>
+        <p style="opacity:0.8; font-size:1.1rem; max-width:600px; margin:0 auto;">Instant estimates from top education loan providers.</p>
+    </div>
+
+    <div class="container" style="margin-top: -30px; padding-bottom:60px;">
         <div class="grid grid-cols-2 gap-6">
             
-            <div class="card">
-                <h3 style="font-size:1.8rem; margin-bottom: 20px;">Financial Eligibility</h3>
-                <p class="text-muted mb-6">Calculate instantaneous financing offers backed by our banking integration network.</p>
-                
-                <form id="loanForm" class="mt-4">
+            <!-- LEFT FORM -->
+            <div class="card" style="box-shadow: 0 20px 40px rgba(10,31,68,0.1);">
+                <form id="loanForm">
                     <div class="mb-4">
-                        <label>Total Projected Cost (INR)</label>
-                        <input type="number" id="cost" placeholder="e.g. 5000000" style="padding: 16px;" required>
+                        <label style="display:flex; align-items:center; gap:8px;">💰 Loan Amount Required (INR)</label>
+                        <input type="number" id="cost" placeholder="e.g. 2500000" style="padding:16px; background:var(--neutral-light); border:none;" required>
                     </div>
-                    <div class="mb-4">
-                        <label>Personal Contribution (INR)</label>
-                        <input type="number" id="contrib" value="500000" style="padding: 16px;" required>
+                    
+                    <div class="mb-4 mt-6">
+                        <label style="display:flex; align-items:center; gap:8px;">🏦 Collateral Available</label>
+                        <select id="collateral" style="padding:16px; background:var(--neutral-light); border:none;">
+                            <option value="Yes">Yes, Collateral Available</option>
+                            <option value="No">No Collateral</option>
+                        </select>
                     </div>
-                    <div class="mb-4">
-                        <label>Co-applicant Monthly Income (INR)</label>
-                        <input type="number" id="income" value="100000" style="padding: 16px;" required>
+
+                    <div class="mb-4 mt-6">
+                        <label style="display:flex; align-items:center; gap:8px;">👤 Co-applicant Annual Income (INR)</label>
+                        <input type="number" id="income" value="800000" style="padding:16px; background:var(--neutral-light); border:none;" required>
                     </div>
-                    <button type="submit" class="btn btn-primary w-full mt-6" style="padding:16px; font-size:1.1rem;">Fetch Financing Offers</button>
+
+                    <button type="submit" class="btn btn-primary w-full mt-8" style="padding:18px; font-size:1.1rem; border-radius:12px;">Calculate Eligibility</button>
                 </form>
             </div>
 
-            <div class="card" id="resultsCard" style="display:none; flex-direction:column;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h3 style="font-size: 1.5rem;">Approval Status</h3>
-                    <div id="eligibilityBadge" style="padding:6px 14px; border-radius:8px; font-weight:bold; font-size:0.9em; border:1px solid transparent;"></div>
-                </div>
+            <!-- RIGHT RESULTS -->
+            <div class="card" id="resultsCard" style="display:none; flex-direction:column; background:white; position:relative;">
                 
-                <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 16px; border: 1px solid var(--glass-border); margin-top:20px;">
-                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:5px;">Estimated Loan Requirement</p>
-                    <b id="reqAmount" style="color:var(--secondary); font-size:1.8rem;"></b>
+                <div id="eligBanner" style="background:rgba(107,203,119,0.1); border:1px solid rgba(107,203,119,0.3); color:var(--accent2); padding:16px 20px; border-radius:12px; display:flex; align-items:center; gap:10px; font-weight:bold; font-size:1.1rem; margin-bottom:30px;">
+                    ✓ Eligible for Education Loan
                 </div>
-                
-                <table id="bankTable" style="margin-top: 30px;">
-                    <tr>
-                        <th>Financial Institution</th>
-                        <th>Rate (Secured)</th>
-                        <th>Est. EMI (10yr)</th>
-                        <th>Proc. Fee</th>
-                    </tr>
-                </table>
 
-                <button class="btn btn-primary w-full mt-8" id="applyBtn" style="padding: 16px; font-size: 1.1rem; background: linear-gradient(135deg, var(--success), #059669); box-shadow: 0 5px 15px rgba(16,185,129,0.3);">
-                    Initiate Unified Application
-                </button>
+                <div id="providersList">
+                    <!-- Cards will be injected -->
+                </div>
+
+                <div style="margin-top:20px; border-top:1px solid rgba(10,31,68,0.05); padding-top:20px;">
+                    <h4 style="margin-bottom:15px; color:var(--neutral-dark);">EMI Breakdown Estimate</h4>
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <div style="width:80px; height:80px; border-radius:50%; background: conic-gradient(var(--primary) 0% 68%, var(--secondary) 68% 100%);"></div>
+                        <ul style="list-style:none; padding:0; margin:0; font-size:0.9rem; color:var(--neutral-dark);">
+                            <li style="margin-bottom:5px;"><span style="display:inline-block; width:12px; height:12px; background:var(--primary); border-radius:50%; margin-right:8px;"></span> Principal (68%)</li>
+                            <li><span style="display:inline-block; width:12px; height:12px; background:var(--secondary); border-radius:50%; margin-right:8px;"></span> Total Interest (32%)</li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
 
         </div>
@@ -71,93 +79,51 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const p = auth.getProfile();
-            if(p) {
-                document.getElementById("cost").value = p.budget;
-            }
+            if(p) { document.getElementById("cost").value = p.budget; }
         });
-
-        let currentLoanAmount = 0;
 
         document.getElementById("loanForm").addEventListener("submit", async(e) => {
             e.preventDefault();
             const payload = {
                 course_cost: parseFloat(document.getElementById("cost").value),
-                own_contribution: parseFloat(document.getElementById("contrib").value),
-                income: parseFloat(document.getElementById("income").value)
+                own_contribution: 0,
+                income: parseFloat(document.getElementById("income").value) / 12 // Using annual for monthly proxy
             };
 
             const rc = document.getElementById('resultsCard');
             rc.style.display = 'flex';
-            rc.style.animation = 'fadeIn 0.6s ease forwards';
+            rc.classList.add('fade-in');
             
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerText;
-            btn.innerText = "Querying banking partners...";
-            btn.disabled = true;
-
             const res = await api.calcLoan(payload);
             
-            btn.innerText = originalText;
-            btn.disabled = false;
-
-            currentLoanAmount = res.required_amount;
-            
-            document.getElementById('reqAmount').innerText = utils.formatCurrency(res.required_amount);
-            
-            const badge = document.getElementById('eligibilityBadge');
-            badge.innerText = res.eligibility;
-            
+            const banner = document.getElementById("eligBanner");
             if(res.eligibility.includes('Not')) {
-                badge.style.background = 'rgba(239,68,68,0.1)';
-                badge.style.color = 'var(--danger)';
-                badge.style.borderColor = 'rgba(239,68,68,0.3)';
+                banner.innerHTML = "✗ Not Eligible Currently";
+                banner.style.background = "rgba(255,107,107,0.1)"; banner.style.borderColor = "var(--secondary)"; banner.style.color = "var(--secondary)";
             } else if(res.eligibility.includes('Partially')) {
-                badge.style.background = 'rgba(245,158,11,0.1)';
-                badge.style.color = 'var(--warning)';
-                badge.style.borderColor = 'rgba(245,158,11,0.3)';
+                banner.innerHTML = "⚠ Needs Review";
+                banner.style.background = "rgba(255,217,61,0.1)"; banner.style.borderColor = "var(--accent1)"; banner.style.color = "#D97706";
             } else {
-                badge.style.background = 'rgba(16,185,129,0.1)';
-                badge.style.color = 'var(--success)';
-                badge.style.borderColor = 'rgba(16,185,129,0.3)';
+                banner.innerHTML = "✓ Eligible for Education Loan";
+                banner.style.background = "rgba(107,203,119,0.1)"; banner.style.borderColor = "var(--accent2)"; banner.style.color = "var(--accent2)";
             }
 
-            const table = document.getElementById('bankTable');
-            table.innerHTML = `<tr><th>Financial Institution</th><th>Rate (Secured)</th><th>Est. EMI (10yr)</th><th>Proc. Fee</th></tr>`;
-            
+            const list = document.getElementById('providersList');
+            list.innerHTML = "";
             res.offers.forEach(o => {
-                table.innerHTML += `
-                    <tr>
-                        <td><b style="color:#f8fafc;">${o.bank}</b></td>
-                        <td style="color:var(--success); font-weight:600;">${o.rate}</td>
-                        <td style="color:var(--secondary);">${utils.formatCurrency(o.emi)}<span style="font-size:0.8em; color:var(--text-muted);">/mo</span></td>
-                        <td style="font-size:0.9em;">${o.fee}</td>
-                    </tr>
+                list.innerHTML += `
+                    <div style="border:1px solid rgba(10,31,68,0.1); border-radius:12px; padding:20px; display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; box-shadow:0 5px 15px rgba(0,0,0,0.02)">
+                        <div>
+                            <h4 style="font-size:1.1rem; color:var(--primary); margin:0;">${o.bank}</h4>
+                            <p style="color:var(--neutral-dark); font-size:0.9rem; margin:5px 0;">EMI: <b>${utils.formatCurrency(o.emi)}/mo</b></p>
+                        </div>
+                        <div style="text-align:right;">
+                            <h3 style="color:var(--secondary); font-size:1.4rem; font-family:'Space Grotesk', sans-serif;">${o.rate}</h3>
+                            <button class="btn btn-outline" style="padding:6px 14px; font-size:0.8rem; border-color:var(--secondary); color:var(--secondary); margin-top:5px; border-radius:6px;">Apply Now →</button>
+                        </div>
+                    </div>
                 `;
             });
-        });
-
-        document.getElementById("applyBtn").addEventListener("click", async() => {
-            const btn = document.getElementById("applyBtn");
-            btn.innerText = "Transmitting securely...";
-            btn.disabled = true;
-            
-            const res = await api.applyLoan({
-                student_id: parseInt(auth.getStudentId()),
-                loan_amount: currentLoanAmount
-            });
-
-            if(res.status === 'success') {
-                utils.showToast("Application transmitted to banking partners successfully!");
-                btn.innerText = "Secured ✓";
-                btn.style.background = "transparent";
-                btn.style.border = "2px solid var(--success)";
-                btn.style.color = "var(--success)";
-                btn.style.boxShadow = "none";
-            } else {
-                utils.showToast("Error transmitting application. Try again.", "error");
-                btn.innerText = "Initiate Unified Application";
-                btn.disabled = false;
-            }
         });
     </script>
 </body>

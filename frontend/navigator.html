@@ -3,41 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Career Navigator - EduPath AI</title>
+    <title>University Recommendations - EduPath AI</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/utils.js"></script>
     <script>auth.checkAuthAndRedirect();</script>
 </head>
-<body>
+<body style="background: var(--neutral-light);">
 
-    <nav class="navbar">
-        <div class="logo"><a href="dashboard.html" style="color: var(--text-muted); transition: color 0.3s; padding-right:15px; border-right: 1px solid var(--glass-border);">← Back</a> &nbsp; <b style="font-size:1.4rem;">Navigator 🧭</b></div>
+    <nav class="navbar" style="border-bottom: 2px solid var(--neutral-light);">
+        <div class="logo"><a href="dashboard.html" style="color:var(--neutral-dark);">← Back to Dashboard</a></div>
+        <div class="nav-links">
+            <span style="font-family:'Poppins', sans-serif; color:var(--primary); font-size:1.2rem;">University Navigator</span>
+        </div>
     </nav>
 
-    <div class="container py-12" style="margin-top: 50px;">
-        <div class="text-center mb-8">
-            <h2 style="font-size: 2.5rem; background: linear-gradient(135deg, #fff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AI University Matches</h2>
-            <p class="text-muted mt-4">Calculated in real-time based on your unified academic profile.</p>
+    <!-- Top Filter Bar -->
+    <div style="margin-top: 100px; max-width: 1400px; margin-left: auto; margin-right: auto; padding: 0 20px;">
+        <div class="glass" style="display: flex; gap: 15px; padding: 15px 25px; border-radius: 12px; align-items: center;" id="filters">
+            <span style="font-weight:600; color:var(--primary);">Filters:</span>
+            <button class="btn btn-outline" style="border:none; background:var(--white); padding:8px 16px; border-radius:20px; box-shadow:0 2px 5px rgba(0,0,0,0.05);" onclick="loadUniversities('All')">All Countries 🌍</button>
+            <button class="btn btn-outline" style="border:none; background:var(--white); padding:8px 16px; border-radius:20px; box-shadow:0 2px 5px rgba(0,0,0,0.05);" onclick="loadUniversities('USA')">USA 🇺🇸</button>
+            <button class="btn btn-outline" style="border:none; background:var(--white); padding:8px 16px; border-radius:20px; box-shadow:0 2px 5px rgba(0,0,0,0.05);" onclick="loadUniversities('UK')">UK 🇬🇧</button>
+            <button class="btn btn-outline" style="border:none; background:var(--white); padding:8px 16px; border-radius:20px; box-shadow:0 2px 5px rgba(0,0,0,0.05);" onclick="loadUniversities('Canada')">Canada 🇨🇦</button>
+        </div>
+    </div>
+
+    <div style="max-width: 1400px; margin: 30px auto; padding: 0 20px; display: flex; gap: 30px;">
+        
+        <!-- MAIN CONTENT - 3 COLUMN GRID -->
+        <div style="flex-grow: 1;">
+            <div id="loader" class="grid grid-cols-3 gap-6">
+                <!-- Skeletons -->
+                <div class="card" style="height:350px; background:#e2e8f0; animation: pulse 1.5s infinite;"></div>
+                <div class="card" style="height:350px; background:#e2e8f0; animation: pulse 1.5s infinite;"></div>
+                <div class="card" style="height:350px; background:#e2e8f0; animation: pulse 1.5s infinite;"></div>
+            </div>
+
+            <div id="uniGrid" class="grid grid-cols-3 gap-6" style="display:none;"></div>
         </div>
 
-        <!-- Filters -->
-        <div style="display:flex; justify-content:center; gap:15px; margin-bottom:40px; flex-wrap:wrap; background: var(--glass-bg); padding: 15px; border-radius: 20px; border: 1px solid var(--glass-border); width: fit-content; margin-left: auto; margin-right: auto;" id="filters">
-            <button class="btn btn-primary" style="padding: 10px 20px;" onclick="loadUniversities('All')">Global</button>
-            <button class="btn btn-outline" style="padding: 10px 20px;" onclick="loadUniversities('USA')">USA</button>
-            <button class="btn btn-outline" style="padding: 10px 20px;" onclick="loadUniversities('UK')">UK</button>
-            <button class="btn btn-outline" style="padding: 10px 20px;" onclick="loadUniversities('Canada')">Canada</button>
-            <button class="btn btn-outline" style="padding: 10px 20px;" onclick="loadUniversities('Germany')">Germany</button>
-            <button class="btn btn-outline" style="padding: 10px 20px;" onclick="loadUniversities('Australia')">Australia</button>
+        <!-- RIGHT SIDEBAR (25%) -->
+        <div style="width: 300px; flex-shrink: 0;">
+            <div class="card" style="background: var(--primary); color: white;">
+                <h3 style="color:white; margin-bottom:15px;">AI Summary ✨</h3>
+                <p style="font-size:0.9rem; opacity:0.9; margin-bottom:20px;">Based on your inputs, you have a strong profile for Top 100 universities globally. We recommend targeting ROI-heavy options.</p>
+                <div style="background:rgba(255,255,255,0.1); padding:10px; border-radius:8px; margin-bottom:10px;">
+                    <span style="font-size:0.8rem; opacity:0.8;">Avg Match Score</span><br>
+                    <b style="font-size:1.5rem; color:var(--accent2);">84%</b>
+                </div>
+            </div>
         </div>
 
-        <div id="loader" class="grid grid-cols-2 gap-6">
-            <div class="card skeleton" style="height:250px;"></div>
-            <div class="card skeleton" style="height:250px;"></div>
-        </div>
-
-        <div id="uniGrid" class="grid grid-cols-2 gap-6" style="display:none;"></div>
     </div>
 
     <script>
@@ -47,16 +65,14 @@
             document.getElementById('loader').style.display = 'grid';
             document.getElementById('uniGrid').style.display = 'none';
 
-            // Update active filter button
+            // Active filter visual
             document.querySelectorAll('#filters button').forEach(b => {
-                if (b.innerText.includes(filterCountry) || (filterCountry === 'All' && b.innerText === 'Global')) {
-                    b.className = 'btn btn-primary fade-in';
-                    b.style.padding = '10px 20px';
+                if (b.innerText.includes(filterCountry) || (filterCountry === 'All' && b.innerText.includes('All'))) {
+                    b.style.background = 'var(--primary)';
+                    b.style.color = 'white';
                 } else {
-                    b.className = 'btn btn-outline';
-                    b.style.padding = '10px 20px';
-                    b.style.borderColor = 'rgba(255,255,255,0.1)';
-                    b.style.color = 'var(--text-muted)';
+                    b.style.background = 'var(--white)';
+                    b.style.color = 'var(--neutral-dark)';
                 }
             });
 
@@ -67,38 +83,35 @@
             };
 
             const data = await api.recommendUniversities(payload);
-            
             const grid = document.getElementById('uniGrid');
             grid.innerHTML = '';
             
             if(data.length === 0) {
-                grid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 40px; background: var(--glass-bg); border-radius: 20px; border: 1px solid var(--glass-border);">No universities found for this trajectory.</div>';
+                grid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding:50px;">No universities found.</div>';
             } else {
-                data.forEach((u, i) => {
-                    const isHigh = u.match_percent >= 80;
-                    const isMid = u.match_percent >= 50 && u.match_percent < 80;
-                    
-                    let bgMatch = isHigh ? 'rgba(16,185,129,0.15)' : (isMid ? 'rgba(245,158,11,0.15)' : 'rgba(239,68,68,0.15)');
-                    let borderMatch = isHigh ? 'rgba(16,185,129,0.3)' : (isMid ? 'rgba(245,158,11,0.3)' : 'rgba(239,68,68,0.3)');
-                    let colorMatch = isHigh ? 'var(--success)' : (isMid ? 'var(--warning)' : 'var(--danger)');
+                data.forEach(u => {
+                    let scoreColor = u.match_percent >= 90 ? 'var(--accent2)' : (u.match_percent >= 70 ? 'var(--accent1)' : 'var(--secondary)');
 
                     grid.innerHTML += `
-                        <div class="card" style="opacity:0; animation: fadeIn 0.6s ease forwards ${i*0.1}s;">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                                <div>
-                                    <h3 style="font-size: 1.4rem;">${u.name} <span style="font-size:0.8em; font-weight:normal; color:var(--text-muted);">(${u.country})</span></h3>
-                                    <p class="text-muted mt-4" style="font-size:0.95rem;">Rank: <span style="color:#fff;">#${u.ranking}</span> &nbsp;&bull;&nbsp; Rate: <span style="color:#fff;">${u.acceptance_rate}%</span></p>
+                        <div class="card" style="padding: 0; overflow: hidden; display:flex; flex-direction:column;">
+                            <div style="height: 140px; background: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1470&auto=format&fit=crop') center/cover;"></div>
+                            <div style="padding: 24px; position: relative;">
+                                <!-- Circular Match Score -->
+                                <div style="position:absolute; top:-30px; right:20px; width:60px; height:60px; border-radius:50%; background:white; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(0,0,0,0.1); border: 3px solid ${scoreColor}; font-weight:bold; font-size:1.1rem; color:${scoreColor};">${u.match_percent}%</div>
+                                
+                                <h3 style="font-size: 1.25rem; font-family:'Poppins', sans-serif; color:var(--primary); margin-bottom:5px;">${u.name}</h3>
+                                <p style="color:var(--neutral-dark); font-size:0.85rem; opacity:0.8; margin-bottom:15px;">📍 ${u.country}</p>
+                                
+                                <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.9rem; border-bottom:1px solid #eee; padding-bottom:10px;">
+                                    <span style="color:var(--neutral-dark);">Ranking</span>
+                                    <strong style="color:var(--primary);">#${u.ranking}</strong>
                                 </div>
-                                <div style="background:${bgMatch}; color:${colorMatch}; border: 1px solid ${borderMatch}; padding:8px 16px; border-radius:20px; font-weight:bold; font-size:0.95rem; box-shadow: 0 0 15px ${bgMatch};">
-                                    ${u.match_percent}% AI Match
+                                <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-size:0.9rem;">
+                                    <span style="color:var(--neutral-dark);">Est. Cost</span>
+                                    <strong style="color:var(--primary);">${utils.formatCurrency(u.annual_cost_inr)}/yr</strong>
                                 </div>
-                            </div>
-                            <p style="margin: 20px 0; color: #cbd5e1; line-height: 1.7;">${u.description}</p>
-                            <div style="margin-bottom:20px; font-weight:600; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; display:inline-block;">
-                                <span style="color: var(--secondary);">💰 Est. Cost:</span> ${utils.formatCurrency(u.annual_cost_inr)}
-                            </div>
-                            <div class="flex gap-4">
-                                <a href="https://${u.website}" target="_blank" class="btn btn-outline" style="width:100%; border-color: rgba(255,255,255,0.1); color: white;">Visit Institution Website</a>
+
+                                <a href="https://${u.website}" target="_blank" class="btn" style="width:100%; border: 1px solid var(--secondary); color:var(--secondary); padding:10px;">View Details →</a>
                             </div>
                         </div>
                     `;
