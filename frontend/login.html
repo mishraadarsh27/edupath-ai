@@ -24,11 +24,11 @@
         body {
             background: linear-gradient(135deg, var(--slate-900) 0%, var(--purple-900) 100%);
             color: var(--text-main);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            padding: 24px;
         }
 
         .login-card {
@@ -36,12 +36,17 @@
             border: 1px solid var(--card-border);
             backdrop-filter: blur(20px);
             border-radius: 24px;
-            padding: 50px;
+            padding: 40px 24px;
             width: 100%;
             max-width: 450px;
             box-shadow: 0 25px 50px rgba(0,0,0,0.5);
             text-align: center;
             animation: fadeIn 0.6s ease;
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.6rem; }
+            .logo-box { width: 50px; height: 50px; font-size: 1.2rem; margin-bottom: 20px; }
         }
 
         @keyframes fadeIn {

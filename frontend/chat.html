@@ -142,6 +142,32 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
+        async function chatStream(msg) {
+            const typing = document.createElement("div");
+            typing.className = "bubble ai fade-in";
+            typing.id = "streamingBubble";
+            typing.innerHTML = `<div class="ai-avatar">AI</div><span id="streamBody"></span>`;
+            chatBox.appendChild(typing);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            let fullText = "";
+            const streamBody = document.getElementById("streamBody");
+
+            await api.chatStream({ 
+                message: msg, 
+                student_id: parseInt(studentId), 
+                chat_history: chatHistory 
+            }, (chunk) => {
+                fullText += chunk;
+                streamBody.innerHTML = fullText.replace(/\n/g, '<br>');
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+
+            chatHistory.push({role: "user", message: msg});
+            chatHistory.push({role: "assistant", message: fullText});
+            document.getElementById("streamingBubble").id = ""; // Finalize bubble
+        }
+
         window.sendMsg = function(msg) {
             document.getElementById("chatInput").value = msg;
             document.getElementById("chatForm").dispatchEvent(new Event("submit", {cancelable: true, bubbles: true}));
@@ -157,21 +183,7 @@
             appendBubble(msg, "user");
             document.getElementById("suggestedChips").style.display = 'none';
 
-            const typing = document.createElement("div");
-            typing.className = "bubble ai fade-in";
-            typing.id = "typingInd";
-            typing.innerHTML = `<div class="ai-avatar">AI</div><span style="display:flex; gap:5px; padding:5px 0;">Wait...<span class="typing-dots"></span></span>`;
-            chatBox.appendChild(typing);
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            const res = await api.chat({ message: msg, student_id: parseInt(studentId), chat_history: chatHistory });
-            document.getElementById("typingInd").remove();
-
-            if(res.message) {
-                appendBubble(res.message, "ai");
-                chatHistory.push({role: "user", message: msg});
-                chatHistory.push({role: "assistant", message: res.message});
-            }
+            await chatStream(msg);
         });
 
         loadHistory();

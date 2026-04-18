@@ -26,6 +26,7 @@
             min-height: 100vh;
             display: flex; align-items: center; justify-content: center;
             position: relative; overflow-x: hidden;
+            padding: 24px;
         }
 
         /* LIGHT MODE BLOBS */
@@ -76,6 +77,13 @@
         .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .btn-back { background: transparent; border: 1px solid rgba(0,0,0,0.1); color: var(--text-dark); }
         .btn-back:hover { background: rgba(0,0,0,0.05); }
+
+        @media (max-width: 600px) {
+            .profile-card { padding: 30px 20px; border-radius: 24px; }
+            .info-grid { grid-template-columns: 1fr; gap: 16px; }
+            .header { flex-direction: column; text-align: center; }
+            .btn-group { flex-direction: column; }
+        }
 
     </style>
 </head>

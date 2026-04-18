@@ -39,6 +39,25 @@ const api = {
     calculateROI: (data) => fetchAPI("/roi/calculate", "POST", data),
     predictAdmission: (data) => fetchAPI("/admission/predict", "POST", data),
     chat: (data) => fetchAPI("/chat", "POST", data),
+    chatStream: async (data, onChunk) => {
+        try {
+            const response = await fetch(`${BASE_URL}/chat`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                onChunk(decoder.decode(value, { stream: true }));
+            }
+        } catch (e) {
+            console.error("Streaming error:", e);
+            onChunk("AI Error: Connection failed.");
+        }
+    },
     getChatHistory: (id) => fetchAPI(`/chat/history/${id}`, "GET"),
     calcLoan: (data) => fetchAPI("/loan/calculate", "POST", data),
     applyLoan: (data) => fetchAPI("/loan/apply", "POST", data),

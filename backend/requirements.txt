@@ -2,6 +2,7 @@ fastapi
 uvicorn
 httpx
 python-dotenv
-pydantic
+pydantic[email]
+email-validator
 python-multipart
 pdfplumber

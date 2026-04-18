@@ -21,7 +21,7 @@
 
     <!-- Top Filter Bar -->
     <div style="margin-top: 100px; max-width: 1400px; margin-left: auto; margin-right: auto; padding: 0 20px;">
-        <div class="glass" style="display: flex; gap: 15px; padding: 15px 25px; border-radius: 12px; align-items: center;" id="filters">
+        <div class="glass" style="display: flex; gap: 15px; padding: 15px 25px; border-radius: 12px; align-items: center; overflow-x: auto; white-space: nowrap;" id="filters">
             <span style="font-weight:600; color:var(--primary);">Filters:</span>
             <button class="btn btn-outline" style="border:none; background:var(--white); padding:8px 16px; border-radius:20px; box-shadow:0 2px 5px rgba(0,0,0,0.05);" onclick="loadUniversities('All')">All Countries 🌍</button>
             <button class="btn btn-outline" style="border:none; background:var(--white); padding:8px 16px; border-radius:20px; box-shadow:0 2px 5px rgba(0,0,0,0.05);" onclick="loadUniversities('USA')">USA 🇺🇸</button>
@@ -30,22 +30,22 @@
         </div>
     </div>
 
-    <div style="max-width: 1400px; margin: 30px auto; padding: 0 20px; display: flex; gap: 30px;">
+    <div class="main-layout">
         
         <!-- MAIN CONTENT - 3 COLUMN GRID -->
-        <div style="flex-grow: 1;">
-            <div id="loader" class="grid grid-cols-3 gap-6">
+        <div class="content-area">
+            <div id="loader" class="uni-grid">
                 <!-- Skeletons -->
                 <div class="card" style="height:350px; background:#e2e8f0; animation: pulse 1.5s infinite;"></div>
                 <div class="card" style="height:350px; background:#e2e8f0; animation: pulse 1.5s infinite;"></div>
                 <div class="card" style="height:350px; background:#e2e8f0; animation: pulse 1.5s infinite;"></div>
             </div>
 
-            <div id="uniGrid" class="grid grid-cols-3 gap-6" style="display:none;"></div>
+            <div id="uniGrid" class="uni-grid" style="display:none;"></div>
         </div>
 
         <!-- RIGHT SIDEBAR (25%) -->
-        <div style="width: 300px; flex-shrink: 0;">
+        <div class="side-info">
             <div class="card" style="background: var(--primary); color: white;">
                 <h3 style="color:white; margin-bottom:15px;">AI Summary ✨</h3>
                 <p style="font-size:0.9rem; opacity:0.9; margin-bottom:20px;">Based on your inputs, you have a strong profile for Top 100 universities globally. We recommend targeting ROI-heavy options.</p>
@@ -57,6 +57,28 @@
         </div>
 
     </div>
+
+    <style>
+        .main-layout { max-width: 1400px; margin: 30px auto; padding: 0 20px; display: flex; gap: 30px; }
+        .content-area { flex-grow: 1; }
+        .side-info { width: 300px; flex-shrink: 0; }
+        .uni-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+        @media (max-width: 1100px) {
+            .uni-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 900px) {
+            .main-layout { flex-direction: column-reverse; }
+            .side-info { width: 100%; }
+            div[style*="margin-top: 100px"] { margin-top: 70px !important; }
+        }
+
+        @media (max-width: 600px) {
+            .uni-grid { grid-template-columns: 1fr; }
+            #filters { padding: 10px; }
+        }
+    </style>
 
     <script>
         const profile = auth.getProfile();
