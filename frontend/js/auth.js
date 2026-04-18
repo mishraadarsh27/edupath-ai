@@ -17,12 +17,11 @@ const auth = {
     },
     checkAuthAndRedirect: () => {
         if (!auth.isLoggedIn()) {
-            window.location.href = "/onboarding.html";
+            window.location.href = "onboarding.html";
         }
     },
     logout: () => {
-        localStorage.removeItem("edupath_profile");
-        localStorage.removeItem("edupath_student_id");
-        window.location.href = "/index.html";
+        localStorage.clear();
+        window.location.href = "index.html";
     }
 };

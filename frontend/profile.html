@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings - EduPath AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script>auth.checkAuthAndRedirect();</script>
+    <style>
+        :root {
+            --bg-soft: #f8fafc;
+            --primary: #3b82f6;
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        body {
+            background-color: var(--bg-soft);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow-x: hidden;
+        }
+
+        /* LIGHT MODE BLOBS */
+        .bg-blobs {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1; filter: blur(80px); opacity: 0.6;
+            background: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 100%);
+        }
+        .blob { position: absolute; border-radius: 50%; animation: float 15s infinite alternate; }
+        .blob-1 { width: 400px; height: 400px; background: #93c5fd; top: -50px; left: -100px; }
+        .blob-2 { width: 350px; height: 350px; background: #c4b5fd; bottom: -50px; right: -100px; animation-delay: -5s; }
+        @keyframes float { from { transform: translate(0,0) scale(1); } to { transform: translate(50px, 50px) scale(1.1); } }
+
+        .profile-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            width: 100%; max-width: 600px;
+            padding: 50px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            animation: slideUp 0.6s ease;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        .header { display: flex; align-items: center; gap: 20px; margin-bottom: 40px; }
+        .avatar-large {
+            width: 80px; height: 80px; background: var(--primary);
+            color: white; border-radius: 24px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; font-weight: 800; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .section-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 20px; display: block; }
+
+        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 40px; }
+        .info-item { background: rgba(255,255,255,0.4); padding: 16px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.6); }
+        .info-item label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px; }
+        .info-item span { font-size: 1rem; font-weight: 700; color: var(--text-dark); }
+
+        .btn-group { display: flex; gap: 16px; }
+        .btn {
+            flex: 1; padding: 16px; border-radius: 16px; font-weight: 700;
+            cursor: pointer; border: none; transition: all 0.3s;
+            text-decoration: none; text-align: center;
+        }
+        .btn-primary { background: var(--text-dark); color: white; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .btn-back { background: transparent; border: 1px solid rgba(0,0,0,0.1); color: var(--text-dark); }
+        .btn-back:hover { background: rgba(0,0,0,0.05); }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="profile-card">
+        <div class="header">
+            <div class="avatar-large" id="avatarInitial">S</div>
+            <div>
+                <h1 id="fullName" style="font-size: 1.8rem; letter-spacing: -1px;">Student Name</h1>
+                <p id="email" style="color: var(--text-muted);">email@example.com</p>
+            </div>
+        </div>
+
+        <span class="section-title">Academic Profile</span>
+        <div class="info-grid">
+            <div class="info-item">
+                <label>Current Degree</label>
+                <span id="degree">Fetching...</span>
+            </div>
+            <div class="info-item">
+                <label>Cumulative GPA</label>
+                <span id="gpa">Fetching...</span>
+            </div>
+            <div class="info-item">
+                <label>Target Dream</label>
+                <span id="target">Fetching...</span>
+            </div>
+            <div class="info-item">
+                <label>Referral Code</label>
+                <span id="refCode" style="color: var(--primary);">Loading...</span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <a href="dashboard.html" class="btn btn-back">← Dashboard</a>
+            <button onclick="auth.logout()" class="btn btn-primary" style="background: #ef4444;">Logout Account</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const profile = auth.getProfile();
+            const sid = auth.getStudentId();
+            
+            if(profile) {
+                document.getElementById("fullName").innerText = profile.name;
+                document.getElementById("email").innerText = profile.email || "No email provided";
+                document.getElementById("avatarInitial").innerText = profile.name[0];
+                document.getElementById("degree").innerText = profile.degree || "N/A";
+                document.getElementById("gpa").innerText = profile.gpa || "N/A";
+                document.getElementById("target").innerText = `${profile.target_course} in ${profile.target_country}`;
+            }
+
+            if(sid) {
+                const stats = await api.getReferralStats(sid);
+                if(stats && stats.referral_code) {
+                    document.getElementById("refCode").innerText = stats.referral_code;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

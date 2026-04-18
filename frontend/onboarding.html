@@ -55,6 +55,16 @@
             <p class="text-muted" style="margin-bottom: 30px;">Complete your profile to unlock AI-driven insights.</p>
 
             <form id="onboardingForm">
+                <!-- AI SCAN SECTION -->
+                <div style="background: rgba(59, 130, 246, 0.05); border: 1px dashed var(--secondary); padding: 15px; border-radius: 12px; margin-bottom: 25px; text-align: center;">
+                    <p style="font-size: 0.85rem; font-weight: 600; color: var(--primary); margin-bottom: 10px;">✨ Speed up! Auto-fill profile using AI Scan</p>
+                    <input type="file" id="transcriptFile" style="display: none;" accept=".pdf" onchange="handleFileScan(this)">
+                    <button type="button" class="btn btn-outline" onclick="document.getElementById('transcriptFile').click()" id="scanBtn" style="font-size: 0.8rem; padding: 10px 20px;">
+                        📄 Scan Transcript (PDF)
+                    </button>
+                    <div id="scanStatus" style="font-size: 0.75rem; color: var(--secondary); margin-top: 8px; display: none;">Scanning and parsing... please wait.</div>
+                </div>
+
                 <!-- STEP 1 -->
                 <div class="step-content active" id="step1">
                     <div class="mb-4">
@@ -64,6 +74,10 @@
                     <div class="mb-4">
                         <label>Email Address</label>
                         <input type="email" id="email" required placeholder="rahul@example.com">
+                    </div>
+                    <div class="mb-4">
+                        <label>Referral Code (Optional)</label>
+                        <input type="text" id="referral_code" placeholder="XYZ123" style="text-transform: uppercase;">
                     </div>
                     <div class="mt-8 flex justify-end">
                         <button type="button" class="btn btn-primary" onclick="goToStep(2)">Next →</button>
@@ -141,7 +155,63 @@
 </div>
 
 <script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const ref = urlParams.get('ref');
+        if (ref) {
+            document.getElementById('referral_code').value = ref.toUpperCase();
+        }
+    });
+
+    async function handleFileScan(input) {
+        if (!input.files || !input.files[0]) return;
+        
+        const file = input.files[0];
+        const status = document.getElementById('scanStatus');
+        const btn = document.getElementById('scanBtn');
+        
+        status.style.display = 'block';
+        btn.disabled = true;
+        btn.innerText = "Processing...";
+
+        try {
+            const data = await api.scanTranscript(file);
+            console.log("AI Extracted Data:", data);
+            
+            if (data.error) {
+                alert("Scan failed: " + data.error);
+            } else {
+                // Auto-fill fields
+                if (data.name) document.getElementById('name').value = data.name;
+                if (data.degree) document.getElementById('degree').value = data.degree;
+                if (data.gpa) document.getElementById('gpa').value = data.gpa;
+                if (data.target_course) document.getElementById('targetCourse').value = data.target_course;
+                
+                alert("✨ Profile auto-filled using AI! Please review the details.");
+                // Jump to Step 2 to show results
+                goToStep(2);
+            }
+        } catch (e) {
+            alert("System error during scan: " + e.message);
+        } finally {
+            status.style.display = 'none';
+            btn.disabled = false;
+            btn.innerText = "📄 Scan Transcript (PDF)";
+        }
+    }
+
     function goToStep(n) {
+        const currentStep = document.querySelector('.step-content.active');
+        if (n > 1) {
+            const inputs = currentStep.querySelectorAll('input, select');
+            for (let input of inputs) {
+                if (!input.checkValidity()) {
+                    input.reportValidity();
+                    return;
+                }
+            }
+        }
+
         document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
         document.getElementById('step' + n).classList.add('active');
         
@@ -153,6 +223,23 @@
 
     document.getElementById("onboardingForm").addEventListener("submit", async(e) => {
         e.preventDefault();
+        
+        // Final validation check for ALL steps
+        const form = e.target;
+        if (!form.checkValidity()) {
+            // Find the first invalid element
+            const invalidElem = form.querySelector(':invalid');
+            if (invalidElem) {
+                // Determine which step it belongs to
+                const step = invalidElem.closest('.step-content');
+                const stepId = step.getAttribute('id');
+                const stepNum = stepId.replace('step', '');
+                goToStep(parseInt(stepNum));
+                invalidElem.reportValidity();
+                return;
+            }
+        }
+
         const btn = document.getElementById("submitBtn");
         btn.innerText = "Saving Profile...";
         btn.disabled = true;
@@ -167,13 +254,16 @@
             budget: parseInt(document.getElementById('budgetRange').value),
             timeline: document.getElementById('timeline').value,
             english_test: document.getElementById('englishTest').value,
-            work_exp: parseInt(document.getElementById('workExp').value)
+            work_exp: parseInt(document.getElementById('workExp').value),
+            referral_code: document.getElementById('referral_code').value.trim()
         };
 
         const res = await api.saveProfile(payload);
         
         if(res.student_id) {
             auth.saveStudentId(res.student_id);
+            // Add referral code to saved profile if returned from server
+            if(res.referral_code) payload.my_referral_code = res.referral_code;
             auth.saveProfile(payload);
             window.location.href = "dashboard.html";
         } else {

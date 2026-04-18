@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse
 from database import init_db
 import os
 
-from routes import student, ai, loan, universities
+from routes import student, ai, loan, universities, referral
 
 app = FastAPI(title="EduPath AI API")
 
@@ -23,6 +23,7 @@ app.include_router(student.router, prefix="/api/student", tags=["Student"])
 app.include_router(universities.router, prefix="/api", tags=["Universities & Prediction"])
 app.include_router(ai.router, prefix="/api/chat", tags=["AI"])
 app.include_router(loan.router, prefix="/api/loan", tags=["Loan"])
+app.include_router(referral.router, prefix="/api/referral", tags=["Referral"])
 
 # Initialize DB on startup
 @app.on_event("startup")
@@ -39,8 +40,7 @@ async def serve_index():
 # Mount frontend files
 if os.path.exists(frontend_dir):
     app.mount("/", StaticFiles(directory=frontend_dir), name="frontend")
-CORS_ALLOW_ORIGINS = ["*"]
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)

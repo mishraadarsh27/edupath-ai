@@ -1,4 +1,4 @@
-const BASE_URL = window.location.origin.includes('localhost') ? "http://localhost:8000/api" : "/api";
+const BASE_URL = "/api";
 
 async function fetchAPI(endpoint, method="GET", body=null) {
     try {
@@ -41,5 +41,16 @@ const api = {
     chat: (data) => fetchAPI("/chat", "POST", data),
     getChatHistory: (id) => fetchAPI(`/chat/history/${id}`, "GET"),
     calcLoan: (data) => fetchAPI("/loan/calculate", "POST", data),
-    applyLoan: (data) => fetchAPI("/loan/apply", "POST", data)
+    applyLoan: (data) => fetchAPI("/loan/apply", "POST", data),
+    getReferralStats: (id) => fetchAPI(`/referral/stats/${id}`, "GET"),
+    login: (email) => fetchAPI(`/student/login/${email}`, "GET"),
+    scanTranscript: async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await fetch(`${BASE_URL}/student/scan-transcript`, {
+            method: "POST",
+            body: formData
+        });
+        return await res.json();
+    }
 };

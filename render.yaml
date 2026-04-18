@@ -2,10 +2,14 @@ services:
   - type: web
     name: edupath-ai
     env: python
+    region: singapore # Closest for Indian users
+    plan: free
     buildCommand: "pip install -r backend/requirements.txt"
     startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: GROQ_API_KEY
         sync: false
       - key: PYTHON_VERSION
-        value: 3.11.0 # Or use your specific python version
+        value: 3.11.0
+      - key: DATABASE_URL # Optional future-proofing
+        value: sqlite:///edupath.db

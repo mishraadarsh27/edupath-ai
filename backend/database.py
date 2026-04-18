@@ -16,6 +16,7 @@ def init_db():
     CREATE TABLE IF NOT EXISTS students (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
+      email TEXT,
       degree TEXT,
       gpa REAL,
       target_country TEXT,
@@ -24,12 +25,23 @@ def init_db():
       timeline TEXT,
       english_test TEXT,
       work_exp INTEGER,
+      referral_code TEXT UNIQUE,
+      referred_by INTEGER,
+      referral_points INTEGER DEFAULT 0,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     ''')
     try:
         cursor.execute("ALTER TABLE students ADD COLUMN english_test TEXT")
         cursor.execute("ALTER TABLE students ADD COLUMN work_exp INTEGER")
+    except:
+        pass
+
+    try:
+        cursor.execute("ALTER TABLE students ADD COLUMN email TEXT")
+        cursor.execute("ALTER TABLE students ADD COLUMN referral_code TEXT")
+        cursor.execute("ALTER TABLE students ADD COLUMN referred_by INTEGER")
+        cursor.execute("ALTER TABLE students ADD COLUMN referral_points INTEGER DEFAULT 0")
     except:
         pass
 

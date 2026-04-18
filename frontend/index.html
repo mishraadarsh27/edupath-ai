@@ -3,128 +3,356 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduPath AI - Start Your Study Abroad Journey</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>EduPath AI - Your AI-Powered Study Abroad Companion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="js/auth.js" defer></script>
+    <style>
+        :root {
+            --text-dark: #1A1A1A;
+            --text-gray: #666666;
+            --bg-white: #FFFFFF;
+            --bg-offwhite: #F8F9FA;
+            --accent-gold: linear-gradient(135deg, #D4AF37 0%, #F9E596 100%);
+            --btn-grad: linear-gradient(90deg, #6B9DC2 0%, #C7B58B 50%, #D8C395 100%);
+            --shadow-sm: 0 4px 15px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { background-color: var(--bg-white); color: var(--text-dark); overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+
+        /* Navigation */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background: transparent;
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+        }
+
+        .logo { font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        
+        .nav-links { display: flex; gap: 35px; align-items: center; font-size: 0.95rem; font-weight: 500; }
+        .nav-links a:hover { color: #D4AF37; }
+
+        .btn-login {
+            background: #F4EEDF;
+            color: var(--text-dark);
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-login:hover { background: #E8DECA; }
+
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+
+        /* Hero Section */
+        .hero {
+            padding-top: 150px;
+            position: relative;
+            background-color: var(--bg-offwhite);
+            background-image: radial-gradient(circle at right top, rgba(200, 200, 200, 0.1) 0%, transparent 40%),
+                              radial-gradient(circle at left bottom, rgba(200, 200, 200, 0.1) 0%, transparent 40%);
+            padding-bottom: 250px; /* Space for overlapping stats */
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+        }
+
+        /* Subtle Circuit Pattern (simulated natively via SVG background) */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M10 10 L40 10 L50 20 L90 20" stroke="%23E0E0E0" stroke-width="1" fill="none"/><circle cx="90" cy="20" r="2" fill="%23E0E0E0"/></svg>');
+            background-size: 200px;
+            opacity: 0.5;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-text { flex: 1; max-width: 550px; }
+        .hero-text h1 { font-size: 3.5rem; line-height: 1.15; font-weight: 700; margin-bottom: 20px; color: #111; }
+        .hero-text p { font-size: 1.1rem; color: var(--text-gray); margin-bottom: 40px; line-height: 1.6; }
+
+        .btn-gradient {
+            background: var(--btn-grad);
+            color: white;
+            padding: 16px 36px;
+            border-radius: 30px; /* Pill shape */
+            font-weight: 600;
+            font-size: 1.05rem;
+            display: inline-block;
+            box-shadow: 0 10px 25px rgba(107, 157, 194, 0.4);
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .btn-gradient:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(107, 157, 194, 0.5); }
+
+        .hero-img { flex: 1; position: relative; }
+        .hero-img img {
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+            object-fit: cover;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Stats Cards (Overlapping) */
+        .stats-wrapper {
+            position: relative;
+            margin-top: -150px;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            padding: 0 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-white);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 320px;
+            transition: transform 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-5px); }
+
+        .stat-icon {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            background: #FDF5E6; /* Light cream */
+            display: flex; align-items: center; justify-content: center;
+            color: #D4AF37; /* Gold */
+        }
+
+        .stat-text h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+        .stat-text p { font-size: 0.85rem; color: var(--text-gray); }
+
+        /* Ecosystem / Features Section */
+        .ecosystem { padding: 100px 0; text-align: center; }
+        .ecosystem h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 15px; }
+        .ecosystem > p { color: var(--text-gray); max-width: 600px; margin: 0 auto 60px auto; font-size: 1.05rem; }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            text-align: left;
+        }
+
+        .feature-card {
+            background: var(--bg-white);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+
+        .f-icon-box {
+            width: 60px; height: 60px;
+            border-radius: 14px;
+            background: var(--accent-gold);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 24px;
+            font-size: 1.5rem; color: #111;
+        }
+
+        .feature-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 12px; }
+        .feature-card p { font-size: 0.9rem; color: var(--text-gray); line-height: 1.6; }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-offwhite);
+            padding: 60px 0 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-grid h4 { font-weight: 700; margin-bottom: 20px; font-size: 1.1rem; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: var(--text-gray); font-size: 0.95rem; transition: color 0.3s; }
+        .footer-links a:hover { color: #1A1A1A; }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="logo"><h2>EduPath AI</h2></div>
-        <div class="nav-links main-nav">
+        <div class="logo">
+            <!-- Box icon mockup -->
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            EduPath AI
+        </div>
+        <div class="nav-links">
             <a href="#features">Features</a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="onboarding.html" class="btn btn-outline" style="padding: 10px 24px; border-color:var(--primary); color:var(--primary);">Login</a>
+            <a href="#how">How It Works</a>
+            <a href="chat.html">AI Mentor</a>
+            <a href="roi.html">ROI Tools</a>
+            <a href="login.html" class="btn-login" id="navLoginBtn">Login</a>
         </div>
     </nav>
 
-    <!-- DESIGN 1: LANDING PAGE HERO -->
-    <section class="hero" style="min-height: 100vh; display: flex; align-items: center; padding-top: 80px; position:relative; background: linear-gradient(135deg, rgba(10,31,68,0.03) 0%, rgba(107,203,119,0.05) 100%);">
-        <div class="container grid grid-cols-2 gap-6 items-center">
-            <!-- Left Side -->
-            <div>
-                <h1 style="font-size: 3rem; line-height: 1.2; margin-bottom: 20px; color: var(--primary);">Your AI-Powered<br>Study Abroad Companion</h1>
-                <p style="font-size: 1.125rem; color: var(--neutral-dark); margin-bottom: 40px; opacity: 0.8;">From university selection to education loan — we guide every step</p>
-                <a href="onboarding.html" class="btn btn-primary" style="font-size: 1.1rem; padding: 16px 32px;" id="startBtn">Start Your Journey →</a>
-                
-                <div style="margin-top: 40px; display: flex; gap: 20px; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; color: var(--primary); font-weight: 600;">
-                    <span style="display:flex; align-items:center; gap:8px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> AI-Powered</span>
-                    <span style="display:flex; align-items:center; gap:8px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> Trusted by 10,000+ Students</span>
-                    <span style="display:flex; align-items:center; gap:8px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> 95% Success Rate</span>
-                </div>
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>Your AI-Powered<br>Study Abroad<br>Companion</h1>
+                <p>Learn AI-Powered Study abroad companion to streamline your journey and maximize your career potential seamlessly.</p>
+                <a href="dashboard.html" class="btn-gradient" id="heroBtn">Go to Dashboard</a>
             </div>
-            <!-- Right Side (Isometric Illustration mock) -->
-            <div style="position:relative; height: 500px; display:flex; align-items:center; justify-content:center;">
-                <!-- Abstract Representation of 3D Isometric Student Laptop -->
-                <div style="width: 350px; height: 350px; background: rgba(107,203,119,0.1); border-radius: 50%; position:absolute; filter:blur(50px);"></div>
-                <div style="width: 250px; height: 250px; background: rgba(10,31,68,0.1); border-radius: 50%; position:absolute; top:0; right:0; filter:blur(40px);"></div>
-                
-                <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1470&auto=format&fit=crop" style="width:100%; height:auto; border-radius:16px; box-shadow: 0 20px 50px rgba(10,31,68,0.15);" alt="Student at laptop">
-                
-                <!-- Floating Glass Cards -->
-                <div class="glass" style="position:absolute; bottom:20px; left:-20px; padding:15px; border-radius:12px; display:flex; align-items:center; gap:10px;">
-                    <div style="background:var(--accent2); width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;">95%</div>
-                    <div><b style="color:var(--primary);">Success Rate</b><br><span style="font-size:0.8rem;">Visa Approvals</span></div>
-                </div>
+            <div class="hero-img">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80" alt="Students studying together">
             </div>
         </div>
     </section>
 
-    <!-- DESIGN 2: FEATURES SECTION -->
-    <section id="features" class="py-12" style="background: var(--neutral-light);">
-        <div class="container text-center">
-            <h2 class="mb-4" style="font-size: 2.5rem; color: var(--primary);">Intelligent Ecosystem</h2>
-            <div class="grid grid-cols-2 gap-6 mt-8" style="max-width: 800px; margin: 2rem auto;">
-                
-                <div class="card" style="background: linear-gradient(135deg, #534AB7 0%, #AFA9EC 100%); color: white; text-align: left; padding: 40px;">
-                    <div style="font-size:3rem; margin-bottom:15px;">🧭</div>
-                    <h3 style="color:white; font-size:1.5rem;">Career Navigator</h3>
-                    <p style="opacity:0.9; margin-top:10px;">Discover universities that match your profile.</p>
-                </div>
+    <!-- Overlapping Trust Cards -->
+    <div class="stats-wrapper container">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="stat-text">
+                <h4>AI-Powered</h4>
+                <p>Intelligent Study Guidance</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+            </div>
+            <div class="stat-text">
+                <h4>10,000+ Students</h4>
+                <p>Trust our platform globally</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+            <div class="stat-text">
+                <h4>95% Success Rate</h4>
+                <p>High visa approval probability</p>
+            </div>
+        </div>
+    </div>
 
-                <div class="card" style="background: linear-gradient(135deg, #FFD93D 0%, #FF6B6B 100%); text-align: left; padding: 40px;">
-                    <div style="font-size:3rem; margin-bottom:15px;">📈</div>
-                    <h3 style="color:var(--primary); font-size:1.5rem;">ROI Calculator</h3>
-                    <p style="color:rgba(10,31,68,0.8); margin-top:10px;">Calculate your return on investment before deciding.</p>
-                </div>
+    <!-- Ecosystem / Features -->
+    <section class="ecosystem container" id="features">
+        <h2>Intelligent Ecosystem</h2>
+        <p>Seamlessly navigate through the complete study abroad cycle with our interconnected suite of highly specialized AI tools.</p>
 
-                <div class="card" style="background: linear-gradient(135deg, #6BCB77 0%, #5DCAA5 100%); color: white; text-align: left; padding: 40px;">
-                    <div style="font-size:3rem; margin-bottom:15px;">🤖</div>
-                    <h3 style="color:white; font-size:1.5rem;">AI Mentor</h3>
-                    <p style="opacity:0.9; margin-top:10px;">Chat with your personal study counselor 24/7.</p>
-                </div>
-
-                <div class="card" style="background: linear-gradient(135deg, #FFD93D 0%, #EF9F27 100%); text-align: left; padding: 40px;">
-                    <div style="font-size:3rem; margin-bottom:15px;">🏦</div>
-                    <h3 style="color:var(--primary); font-size:1.5rem;">Loan Estimator</h3>
-                    <p style="color:rgba(10,31,68,0.8); margin-top:10px;">Check eligibility and calculate EMI instantly.</p>
-                </div>
-
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="f-icon-box">💼</div>
+                <h3>Career Navigator</h3>
+                <p>Discover personalized university recommendations tailored precisely to match your unique academic profile and goals.</p>
+            </div>
+            <div class="feature-card">
+                <div class="f-icon-box">📈</div>
+                <h3>ROI Calculator</h3>
+                <p>Forecast your future 10-year financial returns spanning course costs, living expenses and post-graduate salaries.</p>
+            </div>
+            <div class="feature-card">
+                <div class="f-icon-box">🤖</div>
+                <h3>AI Mentor</h3>
+                <p>Consult with your virtual overseas advisor anytime for instant answers regarding applications, exams and visas.</p>
+            </div>
+            <div class="feature-card">
+                <div class="f-icon-box">💰</div>
+                <h3>Loan Estimator</h3>
+                <p>Calculate realistic bank loan offers instantly and breakdown your EMI based on your available collateral status.</p>
             </div>
         </div>
     </section>
 
-    <!-- DESIGN 3: HOW IT WORKS TIMELINE -->
-    <section id="how-it-works" class="py-12" style="background: var(--white);">
-        <div class="container text-center">
-            <h2 class="mb-4" style="font-size: 2.5rem; color: var(--primary);">How It Works</h2>
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; position:relative; margin-top: 60px;">
-                <!-- Dotted lines -->
-                <div style="position:absolute; top:60px; left:15%; right:15%; height:2px; border-top: 2px dashed #E2E8F0; z-index:0;"></div>
-                
-                <div style="width:30%; position:relative; z-index:1; background:var(--white); padding:0 20px;">
-                    <div style="background: var(--primary); width:120px; height:120px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto; font-size:3rem; color:var(--white); box-shadow: 0 10px 20px rgba(10,31,68,0.2);">📝
-                        <div style="position:absolute; top:-10px; right:70px; background:var(--secondary); color:white; width:30px; height:30px; border-radius:50%; font-weight:bold; display:flex; align-items:center; justify-content:center; font-family:'Poppins', sans-serif;">1</div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="logo" style="margin-bottom:15px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                        EduPath AI
                     </div>
-                    <h3 style="margin-top:20px; font-size:1.2rem;">Setup Profile</h3>
-                    <p class="text-muted mt-2">Tell us about your background, budget, and target.</p>
+                    <p style="color:var(--text-gray); font-size:0.9rem; max-width:250px; line-height:1.6;">
+                        356 Baseastras, Aliemia S Street,<br>
+                        EduPath, AB 12345<br>
+                        <br>
+                        🌍 📱 ✉️
+                    </p>
                 </div>
-
-                <div style="width:30%; position:relative; z-index:1; background:var(--white); padding:0 20px;">
-                    <div style="background: var(--accent2); width:120px; height:120px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto; font-size:3rem; color:var(--white); box-shadow: 0 10px 20px rgba(107,203,119,0.3);">🧠
-                        <div style="position:absolute; top:-10px; right:70px; background:var(--primary); color:white; width:30px; height:30px; border-radius:50%; font-weight:bold; display:flex; align-items:center; justify-content:center; font-family:'Poppins', sans-serif;">2</div>
-                    </div>
-                    <h3 style="margin-top:20px; font-size:1.2rem;">Get Recommendations</h3>
-                    <p class="text-muted mt-2">Our AI provides perfect matches and calculates ROI.</p>
+                <div>
+                    <h4>Features</h4>
+                    <ul class="footer-links">
+                        <li><a href="#how">How It Works</a></li>
+                        <li><a href="chat.html">AI Mentor</a></li>
+                        <li><a href="roi.html">ROI Tools</a></li>
+                        <li><a href="navigator.html">University Locator</a></li>
+                    </ul>
                 </div>
-
-                <div style="width:30%; position:relative; z-index:1; background:var(--white); padding:0 20px;">
-                    <div style="background: var(--accent1); width:120px; height:120px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto; font-size:3rem; color:var(--white); box-shadow: 0 10px 20px rgba(255,217,61,0.3);">🏦
-                        <div style="position:absolute; top:-10px; right:70px; background:var(--secondary); color:white; width:30px; height:30px; border-radius:50%; font-weight:bold; display:flex; align-items:center; justify-content:center; font-family:'Poppins', sans-serif;">3</div>
-                    </div>
-                    <h3 style="margin-top:20px; font-size:1.2rem;">Apply for Loan</h3>
-                    <p class="text-muted mt-2">Finalize your funding effortlessly.</p>
+                <div>
+                    <h4>Contact Info</h4>
+                    <ul class="footer-links">
+                        <li><a href="tel:+323357836">📞 +32-335-7836</a></li>
+                        <li><a href="mailto:info@edupath.com">✉️ info@edupath.com</a></li>
+                        <li><a href="#">🌐 www.edupath.com</a></li>
+                    </ul>
                 </div>
             </div>
+            <div class="footer-bottom">
+                Copyright © 2026 EduPath AI. All rights reserved.
+            </div>
         </div>
-    </section>
+    </footer>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            if(auth.isLoggedIn()) {
-                const startBtn = document.getElementById("startBtn");
-                startBtn.innerText = "Go to Dashboard →";
-                startBtn.href = "dashboard.html";
+            if(auth && auth.isLoggedIn()) {
+                const navLoginBtn = document.getElementById("navLoginBtn");
+                if(navLoginBtn) {
+                    navLoginBtn.innerText = "Dashboard";
+                    navLoginBtn.href = "dashboard.html";
+                }
+            } else {
+                const heroBtn = document.getElementById("heroBtn");
+                if(heroBtn) {
+                    heroBtn.innerText = "Get Started Now";
+                    heroBtn.href = "onboarding.html";
+                }
             }
         });
     </script>
