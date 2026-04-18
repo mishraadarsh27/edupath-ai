@@ -71,5 +71,13 @@ const api = {
             body: formData
         });
         return await res.json();
-    }
+    },
+    getTimeline: (id) => fetchAPI(`/student/timeline/${id}`, "GET"),
+    subscribe: (data) => fetchAPI("/student/subscribe", "POST", data),
+    generateContent: (data) => fetchAPI("/chat/generate-content", "POST", data),
+    reviewSOP: (data) => fetchAPI("/chat/review-sop", "POST", data)
 };
+
+
+
+

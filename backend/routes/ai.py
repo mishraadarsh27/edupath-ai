@@ -144,3 +144,150 @@ def get_chat_history(student_id: int):
     except Exception as e:
         logger.error(f"Error fetching history: {e}")
         return {"history": []}
+
+class ContentRequest(BaseModel):
+    student_id: int
+    content_type: str  # "blog", "newsletter", "reel"
+
+@router.post("/generate-content")
+async def generate_marketing_content(req: ContentRequest):
+    """Generates personalized study-abroad content for the Growth Engine."""
+    student_data = {}
+    with get_db_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM students WHERE id = ?", (req.student_id,))
+        student = cursor.fetchone()
+        if student:
+            student_data = dict(student)
+
+    prompt_map = {
+        "blog": f"Write a short, engaging blog post (300 words) for an Indian student planning to study {student_data.get('target_course')} in {student_data.get('target_country')}. Focus on job opportunities and early application benefits. Tone: Inspiring.",
+        "newsletter": f"Write an email newsletter subject and body for a student interested in {student_data.get('target_country')}. Mention that for a GPA of {student_data.get('gpa')}, they have great chances.",
+        "reel": f"Write a 30-second script for an Instagram Reel about studying in {student_data.get('target_country')}. Include hook, 3 value points, and a CTA for EduPath AI. Keep it catchy."
+    }
+
+    prompt = prompt_map.get(req.content_type, "Provide high-value study abroad advice.")
+    
+    payload = {
+        "model": "llama-3.3-70b-versatile",
+        "messages": [
+            {"role": "system", "content": "You are a creative marketing & admissions AI. Provide high-quality content for students."},
+            {"role": "user", "content": prompt}
+        ]
+    }
+    
+    headers = {
+        "Authorization": f"Bearer {GROQ_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    async with httpx.AsyncClient() as client:
+        res = await client.post(GROQ_API_URL, json=payload, headers=headers)
+        data = res.json()
+        if "choices" in data:
+            return {"content": data['choices'][0]['message']['content']}
+        else:
+            return {"error": "Content generation failed"}
+
+class SOPRequest(BaseModel):
+    student_id: int
+    sop_text: str
+
+@router.post("/review-sop")
+async def review_sop(req: SOPRequest):
+    """Deep AI analysis of student SOPs/Essays."""
+    student_data = {}
+    with get_db_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM students WHERE id = ?", (req.student_id,))
+        student = cursor.fetchone()
+        if student:
+            student_data = dict(student)
+
+    prompt = f"""You are an Admissions Officer at a top university in {student_data.get('target_country')}.
+    Review this Statement of Purpose for a student applying for {student_data.get('target_course')}.
+    
+    Student Profile: GPA {student_data.get('gpa')}, Experience: {student_data.get('work_exp')} months.
+    
+    CRITIQUE THE FOLLOWING SOP:
+    ---
+    {req.sop_text}
+    ---
+    
+    Provide:
+    1. Score (0-100)
+    2. Strengths (3 points)
+    3. Weaknesses/Gaps (3 points)
+    4. Actionable improvements.
+    
+    Format as JSON with keys: "score", "strengths", "weaknesses", "improvements"."""
+
+    payload = {
+        "model": "llama-3.3-70b-versatile",
+        "messages": [
+            {"role": "system", "content": "You are a professional academic reviewer. Return ONLY JSON."},
+            {"role": "user", "content": prompt}
+        ],
+        "response_format": {"type": "json_object"}
+    }
+    
+    headers = {
+        "Authorization": f"Bearer {GROQ_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    async with httpx.AsyncClient(timeout=40.0) as client:
+        res = await client.post(GROQ_API_URL, json=payload, headers=headers)
+        data = res.json()
+        if "choices" in data:
+            return json.loads(data['choices'][0]['message']['content'])
+        else:
+            return {"error": "SOP Review failed"}
+
+@router.get("/run-agent-loop")
+async def run_autonomous_agent():
+    """Simulates the Bonus Challenge: Zero-Human AI Growth Loop."""
+    try:
+        with get_db_conn() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, name, target_country, gpa FROM students")
+            all_students = cursor.fetchall()
+
+        agent_logs = []
+        for student in all_students:
+            # Simulate "Analysis" phase
+            needs_nudge = random.random() > 0.3 # 70% chance they need a nudge
+            
+            if needs_nudge:
+                # Simulate "Generation" phase
+                agent_prompt = f"Student {student['name']} is interested in {student['target_country']} with GPA {student['gpa']}. Generate a 1-sentence hyper-personalized nudge."
+                
+                payload = {
+                    "model": "llama-3.3-70b-versatile",
+                    "messages": [{"role": "user", "content": agent_prompt}]
+                }
+                
+                async with httpx.AsyncClient() as client:
+                    headers = {"Authorization": f"Bearer {GROQ_API_KEY}"}
+                    res = await client.post(GROQ_API_URL, json=payload, headers=headers)
+                    nudget_text = res.json()['choices'][0]['message']['content']
+                    
+                agent_logs.append({
+                    "student_id": student['id'],
+                    "action": "PERSONAL_NUDGE_GENERATED",
+                    "content": nudget_text,
+                    "channel": "PUSH_NOTIFICATION"
+                })
+
+        return {
+            "status": "success",
+            "agent_cycle_id": f"CYCLE_{random.randint(1000, 9999)}",
+            "students_analyzed": len(all_students),
+            "actions_taken": agent_logs
+        }
+    except Exception as e:
+        logger.error(f"Agent Loop error: {e}")
+        return {"status": "error", "message": str(e)}
+
+
+

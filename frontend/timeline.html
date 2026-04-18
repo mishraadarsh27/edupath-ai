@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Journey - EduPath AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <style>
+        .timeline-container {
+            max-width: 800px;
+            margin: 60px auto;
+            position: relative;
+            padding: 0 20px;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(10, 31, 68, 0.1);
+            transform: translateX(-50%);
+        }
+        .timeline-item {
+            margin-bottom: 50px;
+            position: relative;
+            width: 50%;
+            padding: 20px;
+            transition: all 0.4s ease;
+        }
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            text-align: left;
+        }
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            text-align: right;
+        }
+        .timeline-dot {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: var(--white);
+            border: 3px solid var(--secondary);
+            border-radius: 50%;
+            top: 30px;
+            z-index: 2;
+        }
+        .timeline-item:nth-child(even) .timeline-dot { left: -8px; }
+        .timeline-item:nth-child(odd) .timeline-dot { right: -8px; }
+
+        .timeline-card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: inline-block;
+            width: 100%;
+        }
+        .time-date {
+            font-size: 0.85rem;
+            color: var(--secondary);
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .time-category {
+            font-size: 0.7rem;
+            background: var(--neutral-light);
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        .status-pill {
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            float: right;
+        }
+        .status-active { background: #dcfce7; color: #166534; }
+        .status-upcoming { background: #f1f5f9; color: #475569; }
+        .status-completed { background: #dbeafe; color: #1e40af; }
+
+        @media (max-width: 600px) {
+            .timeline-line { left: 20px; }
+            .timeline-item { width: 100%; left: 0 !important; text-align: left !important; padding-left: 50px; }
+            .timeline-dot { left: 12px !important; }
+        }
+    </style>
+</head>
+<body style="background: var(--neutral-light);">
+
+    <nav class="navbar">
+        <div class="logo"><a href="dashboard.html">← Back</a></div>
+        <div class="logo"><h2>Your Multi-Month Roadmap</h2></div>
+        <div></div>
+    </nav>
+
+    <div style="padding-top: 100px;" class="container">
+        <div style="text-align:center; margin-bottom: 40px;" class="fade-in">
+            <h1>Master Timeline</h1>
+            <p>Strategically mapped milestones for your target intake.</p>
+        </div>
+
+        <div class="timeline-container" id="timelineList">
+            <div class="timeline-line"></div>
+            <!-- Timeline items will be injected here -->
+            <div style="text-align:center; padding: 40px; color: var(--text-muted);">Generating your personalized journey...</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const studentId = auth.getStudentId();
+            if(!studentId) return window.location.href="login.html";
+
+            const timeline = await api.getTimeline(studentId);
+            const container = document.getElementById("timelineList");
+            
+            if(timeline.error) {
+                container.innerHTML = `<div style="color:red; text-align:center;">${timeline.error}</div>`;
+                return;
+            }
+
+            // Remove loading text but keep line
+            container.innerHTML = '<div class="timeline-line"></div>';
+
+            timeline.forEach((m, index) => {
+                const item = document.createElement("div");
+                item.className = "timeline-item fade-in";
+                item.style.animationDelay = `${index * 0.1}s`;
+                
+                item.innerHTML = `
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <span class="status-pill status-${m.status}">${m.status.toUpperCase()}</span>
+                        <div class="time-date">${m.date}</div>
+                        <div class="time-category">${m.category}</div>
+                        <h3 style="font-size: 1.1rem; margin-top:5px;">${m.task}</h3>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        });
+    </script>
+</body>
+</html>

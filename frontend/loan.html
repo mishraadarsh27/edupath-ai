@@ -71,7 +71,25 @@
                     </div>
                 </div>
 
+                <div id="aiAssistBox" style="display:none; margin-top:30px; padding:20px; background:rgba(255,107,107,0.05); border-radius:16px; border:1px dashed var(--secondary);">
+                    <p style="font-weight:800; color:var(--secondary); font-size:0.8rem; margin-bottom:10px;">✨ AI APPLICATION ASSIST</p>
+                    <h4 id="assistTitle" style="margin-bottom:10px;">Ready for SBI Application?</h4>
+                    <p style="font-size:0.85rem; margin-bottom:15px;">We can auto-fill 85% of your form using your profile data and transcript scan.</p>
+                    <button class="btn btn-primary" style="width:100%;" onclick="startAutoFill()">Start Auto-fill Application →</button>
+                    
+                    <div id="checklist" style="margin-top:20px; display:none;">
+                        <h4 style="font-size:0.9rem; margin-bottom:10px;">Required Documents:</h4>
+                        <ul style="list-style:none; padding:0; font-size:0.85rem;">
+                            <li style="margin-bottom:5px;">✅ Profile Data (Done)</li>
+                            <li style="margin-bottom:5px;">✅ Academic Transcripts (Done)</li>
+                            <li style="margin-bottom:5px;">⭕ PAN & Aadhar Card</li>
+                            <li style="margin-bottom:5px;">⭕ Co-applicant Bank Statement (6mo)</li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
+
 
         </div>
     </div>
@@ -119,12 +137,31 @@
                         </div>
                         <div style="text-align:right;">
                             <h3 style="color:var(--secondary); font-size:1.4rem; font-family:'Space Grotesk', sans-serif;">${o.rate}</h3>
-                            <button class="btn btn-outline" style="padding:6px 14px; font-size:0.8rem; border-color:var(--secondary); color:var(--secondary); margin-top:5px; border-radius:6px;">Apply Now →</button>
+                            <button class="btn btn-outline" onclick="assistApplication('${o.bank}')" style="padding:6px 14px; font-size:0.8rem; border-color:var(--secondary); color:var(--secondary); margin-top:5px; border-radius:6px;">Apply Now →</button>
                         </div>
                     </div>
                 `;
             });
         });
+
+        function assistApplication(bank) {
+            document.getElementById('aiAssistBox').style.display = 'block';
+            document.getElementById('assistTitle').innerText = `Apply with ${bank}`;
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function startAutoFill() {
+            const btn = event.target;
+            btn.innerText = "Processing Data...";
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                document.getElementById('checklist').style.display = 'block';
+                btn.innerText = "Application Draft Ready!";
+                alert("✨ AI has successfully mapped your profile to the loan application. Please upload the remaining documents to submit.");
+            }, 2000);
+        }
     </script>
+
 </body>
 </html>

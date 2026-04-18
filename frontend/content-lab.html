@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Content Lab - EduPath AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <style>
+        .lab-layout { display: flex; gap: 30px; margin-top: 40px; }
+        .lab-sidebar { width: 300px; display: flex; flex-direction: column; gap: 15px; }
+        .lab-main { flex: 1; min-height: 500px; }
+        .mode-btn { 
+            padding: 20px; border-radius: 12px; background: var(--white); border: 1px solid rgba(0,0,0,0.05);
+            cursor: pointer; transition: all 0.3s; text-align: left;
+        }
+        .mode-btn:hover, .mode-btn.active { border-color: var(--secondary); box-shadow: 0 10px 20px rgba(255,107,107,0.1); }
+        .mode-btn.active { background: var(--secondary); color: white; }
+        .mode-btn.active p { color: white; opacity: 0.8; }
+        
+        .content-display { 
+            background: var(--white); border-radius: 20px; padding: 40px; 
+            min-height: 400px; border: 1px solid rgba(0,0,0,0.05); white-space: pre-wrap;
+            font-family: 'Inter', sans-serif; line-height: 1.8; color: var(--neutral-dark);
+        }
+    </style>
+</head>
+<body style="background: var(--neutral-light);">
+
+    <nav class="navbar">
+        <div class="logo"><a href="dashboard.html">← Back</a></div>
+        <div class="logo"><h2>AI Growth Engine</h2></div>
+        <div></div>
+    </nav>
+
+    <div style="padding-top: 100px;" class="container">
+        <div class="fade-in">
+            <h1>AI Content Lab 🧪</h1>
+            <p>Generate high-quality marketing materials personalized to your profile.</p>
+        </div>
+
+        <div class="lab-layout">
+            <aside class="lab-sidebar fade-in">
+                <div class="mode-btn active" onclick="setMode('blog', this)">
+                    <h3 style="margin-bottom:5px;">Personal Blog</h3>
+                    <p style="font-size: 0.8rem; color:var(--text-muted);">SEO-optimized post for your journey.</p>
+                </div>
+                <div class="mode-btn" onclick="setMode('newsletter', this)">
+                    <h3 style="margin-bottom:5px;">Uni Newsletter</h3>
+                    <p style="font-size: 0.8rem; color:var(--text-muted);">Email script for your subscribers.</p>
+                </div>
+                <div class="mode-btn" onclick="setMode('reel', this)">
+                    <h3 style="margin-bottom:5px;">Insta Reel Script</h3>
+                    <p style="font-size: 0.8rem; color:var(--text-muted);">Catchy script for social media.</p>
+                </div>
+                
+                <button id="genBtn" class="btn btn-primary w-full mt-8" onclick="generate()">✨ Generate Magic</button>
+            </aside>
+
+            <main class="lab-main fade-in" style="animation-delay: 0.2s;">
+                <div id="contentBox" class="content-display">
+                    <div style="text-align:center; padding: 100px; color: var(--text-muted);">
+                        <span style="font-size: 3rem;">📄</span>
+                        <p>Select a mode and click generate.</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'blog';
+
+        function setMode(mode, btn) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        async function generate() {
+            const studentId = auth.getStudentId();
+            const btn = document.getElementById('genBtn');
+            const box = document.getElementById('contentBox');
+
+            btn.disabled = true;
+            btn.innerText = "Writing...";
+            box.style.opacity = "0.5";
+
+            const res = await api.generateContent({
+                student_id: parseInt(studentId),
+                content_type: currentMode
+            });
+
+            btn.disabled = false;
+            btn.innerText = "✨ Generate Magic";
+            box.style.opacity = "1";
+
+            if (res.content) {
+                box.innerText = res.content;
+            } else {
+                box.innerText = "Error: " + (res.error || "Generation failed.");
+            }
+        }
+    </script>
+</body>
+</html>

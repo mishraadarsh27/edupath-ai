@@ -146,3 +146,55 @@ async def scan_transcript(file: UploadFile = File(...)):
     except Exception as e:
         logger.error(f"OCR Scan error: {e}")
         raise HTTPException(status_code=500, detail=f"OCR Scan Failed: {str(e)}")
+
+@router.get("/timeline/{student_id}")
+def get_timeline(student_id: int):
+    """Generates a dynamic 12-month application timeline based on target enrollment."""
+    with get_db_conn() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT timeline, target_country FROM students WHERE id = ?", (student_id,))
+        student = cursor.fetchone()
+        
+        if not student:
+            raise HTTPException(status_code=404, detail="Student not found")
+        
+        target_date_str = student['timeline'] # Format: YYYY-MM
+        try:
+            from datetime import datetime, timedelta
+            target_date = datetime.strptime(target_date_str, "%Y-%m")
+        except:
+            # Fallback if format is wrong
+            target_date = datetime.now() + timedelta(days=365)
+
+        milestones = [
+            {"month_offset": -12, "task": "Initial Research & Goal Setting", "category": "Discovery", "status": "completed"},
+            {"month_offset": -10, "task": "Standardized Test Prep (IELTS/GRE)", "category": "Tests", "status": "active"},
+            {"month_offset": -8, "task": "University Shortlisting & Academic CV", "category": "Discovery", "status": "upcoming"},
+            {"month_offset": -7, "task": "Take English/Entrance Exams", "category": "Tests", "status": "upcoming"},
+            {"month_offset": -6, "task": "SOP & LOR Finalization", "category": "Documents", "status": "upcoming"},
+            {"month_offset": -5, "task": "Apply to Universities (Round 1)", "category": "Submission", "status": "upcoming"},
+            {"month_offset": -3, "task": "Receive Offers & Secure Funding", "category": "Submission", "status": "upcoming"},
+            {"month_offset": -2, "task": "Student Visa Application", "category": "Visa", "status": "upcoming"},
+            {"month_offset": 0, "task": "Departure & Virtual Orientation", "category": "Final", "status": "upcoming"}
+        ]
+
+        generated_timeline = []
+        for m in milestones:
+            date = target_date + timedelta(days=m['month_offset'] * 30)
+            generated_timeline.append({
+                "date": date.strftime("%b %Y"),
+                "task": m['task'],
+                "category": m['category'],
+                "status": m['status']
+            })
+            
+        return generated_timeline
+
+@router.post("/subscribe")
+def subscribe_newsletter(data: dict):
+    """Growth Engine: Simulated subscription for newsletters and smart nudges."""
+    email = data.get("email")
+    if not email:
+        raise HTTPException(status_code=400, detail="Email required")
+    return {"message": "Success! You are now part of our AI growth loop. Expect smart nudges soon.", "id": "".join(random.choices(string.digits, k=6))}
+

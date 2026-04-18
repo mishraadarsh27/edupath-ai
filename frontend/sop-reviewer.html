@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI SOP Reviewer - EduPath AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</head>
+<body style="background: var(--neutral-light);">
+
+    <nav class="navbar">
+        <div class="logo"><a href="dashboard.html">← Back</a></div>
+        <div class="logo"><h2>AI Application Review</h2></div>
+        <div></div>
+    </nav>
+
+    <div style="padding-top: 100px;" class="container">
+        <div class="grid grid-cols-2 gap-6">
+            
+            <!-- LEFT: INPUT -->
+            <div class="fade-in">
+                <h1 style="margin-bottom: 20px;">SOP Intelligence ✍️</h1>
+                <p class="text-muted" style="margin-bottom: 30px;">Paste your Statement of Purpose (SOP) below. Our AI Admissions Officer will analyze it against top-tier university standards.</p>
+                
+                <textarea id="sopText" style="width:100%; height:400px; padding:20px; border-radius:16px; border:1px solid rgba(0,0,0,0.1); font-family:'Inter', sans-serif; font-size:1rem; resize:none;" placeholder="Start pasting your SOP here..."></textarea>
+                
+                <button id="reviewBtn" class="btn btn-primary w-full mt-4" onclick="startReview()" style="padding:18px; font-size:1.1rem;">✨ Review My SOP</button>
+            </div>
+
+            <!-- RIGHT: FEEDBACK -->
+            <div id="resultsCol" class="fade-in" style="display:none; animation-delay: 0.2s;">
+                <div class="card" style="background:var(--white); position:relative; overflow:hidden;">
+                    <div id="scoreBadge" style="position:absolute; top:20px; right:20px; width:80px; height:80px; border-radius:50%; border:5px solid var(--secondary); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.5rem; color:var(--primary);">85</div>
+                    
+                    <h2 style="margin-bottom:30px;">Analysis Report</h2>
+                    
+                    <div style="margin-bottom:25px;">
+                        <h4 style="color:var(--accent2); margin-bottom:10px;">🟢 Core Strengths</h4>
+                        <ul id="strengths" style="padding-left:20px; font-size:0.95rem;"></ul>
+                    </div>
+
+                    <div style="margin-bottom:25px;">
+                        <h4 style="color:var(--secondary); margin-bottom:10px;">🔴 Critical Gaps</h4>
+                        <ul id="weaknesses" style="padding-left:20px; font-size:0.95rem;"></ul>
+                    </div>
+
+                    <div style="background:rgba(59, 130, 246, 0.05); padding:20px; border-radius:12px;">
+                        <h4 style="margin-bottom:10px;">💡 AI Improvement Plan</h4>
+                        <p id="improvements" style="font-size:0.9rem; font-style:italic;"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="placeholderCol" class="text-center" style="display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0.3;">
+                <span style="font-size: 5rem;">🔍</span>
+                <p>Awaiting your draft...</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        async function startReview() {
+            const text = document.getElementById('sopText').value;
+            if (text.length < 100) return alert("Please provide a longer draft (at least 100 characters).");
+
+            const studentId = auth.getStudentId();
+            const btn = document.getElementById('reviewBtn');
+            btn.disabled = true;
+            btn.innerText = "Analyzing Narrative...";
+
+            const res = await api.reviewSOP({
+                student_id: parseInt(studentId),
+                sop_text: text
+            });
+
+            btn.disabled = false;
+            btn.innerText = "✨ Review My SOP";
+
+            if (res.error) {
+                alert(res.error);
+            } else {
+                document.getElementById('placeholderCol').style.display = 'none';
+                document.getElementById('resultsCol').style.display = 'block';
+                
+                document.getElementById('scoreBadge').innerText = res.score;
+                
+                const listStr = document.getElementById('strengths');
+                listStr.innerHTML = res.strengths.map(s => `<li style="margin-bottom:8px;">${s}</li>`).join('');
+                
+                const listWeak = document.getElementById('weaknesses');
+                listWeak.innerHTML = res.weaknesses.map(w => `<li style="margin-bottom:8px;">${w}</li>`).join('');
+                
+                document.getElementById('improvements').innerText = res.improvements;
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>
