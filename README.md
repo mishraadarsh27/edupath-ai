@@ -1,53 +1,90 @@
-# EduPath AI 🚀
+# EduPath AI 🎓🚀
 
-EduPath AI is a premium, modern, AI-powered Unified Student Engagement Platform for Indian students planning higher education abroad.
+**EduPath AI** is a premium, AI-powered student assistant platform designed to simplify the journey of Indian students planning higher education abroad. It provides data-driven insights into university selection, financial ROI, and admission chances through an ultra-modern, responsive interface.
 
-## ✨ Tech Stack
-- **Frontend:** Vanilla HTML/CSS/JS (High-performance, zero dependencies)
-- **Backend:** Python FastAPI
-- **Database:** SQLite (Production-ready schema)
-- **AI:** Groq Llama 3.3 (High-speed, low latency)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://edupath-ai-nxm0.onrender.com)
 
-## 🚀 Live Demo
-**[Deploying to Render...]**
+---
 
-## 🛠️ Setup & Running Locally
+## 🌟 Key Features
 
-1. **Navigate to backend:**
+- **🧠 AI Streaming Mentor**: A real-time intelligent counselor powered by Groq (Llama 3.3). It uses **RAG-lite** (Retrieval-Augmented Generation) to provide factual university recommendations from a curated database.
+- **🧭 University Navigator**: Profile-based discovery with match-score algorithms covering the USA, UK, Canada, Germany, and Australia.
+- **📊 Real-time ROI Analyzer**: 10-year financial forecasting to help students understand the true value of their international degree.
+- **✨ AI Profile Scan**: Instant data extraction from academic transcripts (PDF) using AI-powered OCR.
+- **🎯 Admission Predictor**: Probability scoring based on GPA, English proficiency, and work experience.
+- **🏦 Loan Gateway**: Instant eligibility checks and EMI comparisons between top Indian banks like SBI and HDFC.
+- **🎁 Referral System**: Integrated reward mechanism for students to invite friends and gain points.
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **HTML5 & Vanilla CSS**: Custom-built design system with light-mode glassmorphism and bento-grid layouts.
+- **JavaScript (ES6+)**: Real-time streaming API integration and dynamic UI states.
+- **Responsive Design**: Fully optimized for Desktop, Tablet, and Mobile devices.
+
+### Backend
+- **FastAPI**: High-performance Python framework for modern APIs.
+- **SQLite**: Local database with context-managed connection pools for speed and consistency.
+- **Groq AI**: Llama 3.3-70b integration for ultra-low latency intelligent interactions.
+- **pdfplumber**: Professional PDF parsing for transcript analysis.
+
+---
+
+## 🚀 Live Deployment
+
+The application is deployed and live at:
+🔗 **[https://edupath-ai-nxm0.onrender.com](https://edupath-ai-nxm0.onrender.com)**
+
+---
+
+## ⚙️ Local Development
+
+### Prerequisites
+- Python 3.9+
+- Groq API Key (Get it at [console.groq.com](https://console.groq.com))
+
+### Steps to Run
+1. **Clone the repository:**
    ```bash
-   cd backend
+   git clone https://github.com/mishraadarsh27/edupath-ai.git
+   cd edupath-ai
    ```
 
-2. **Install dependencies:**
+2. **Install Backend Dependencies:**
    ```bash
+   cd backend
    pip install -r requirements.txt
    ```
 
-3. **Set up environment variables:**
-   Create a `.env` file in the `backend/` directory:
+3. **Configure Environment:**
+   Create a `.env` file in the `backend/` folder:
    ```env
-   GROQ_API_KEY=your_key_here
+   GROQ_API_KEY=your_groq_api_key_here
    ```
 
-4. **Run the backend server:**
+4. **Start the Server:**
    ```bash
    python main.py
    ```
 
-5. **Open app:**
-   Navigate to [http://localhost:8000](http://localhost:8000)
+5. **Access the App:**
+   Open your browser and go to `http://localhost:8000`.
 
-## 🌐 Deployment (Render)
+---
 
-1. **Push to GitHub:** Ensure your code is in a public or private GitHub repository.
-2. **Link to Render:** Go to [Render Dashboard](https://dashboard.render.com), click **New +**, and select **Blueprint**.
-3. **Connect Repo:** Select your `edupath-ai` repository.
-4. **Environment Variables:** Render will prompt you for the `GROQ_API_KEY`. Enter it and click **Apply**.
-5. **Success:** Your app will be live at `https://edupath-ai.onrender.com` (or similar).
+## 📈 Optimization & Architecture
+- **Database Context Manager**: Automated connection lifecycle in `database.py`.
+- **Streaming Responses**: Implemented via `StreamingResponse` for low latency.
+- **Systematic Migrations**: Automated schema updates for production safety.
+- **Mobile-First Design**: Media queries at 900px and 600px break-points for fluid UI.
 
-## 💡 Features
-- **AI Mentor:** 24/7 intelligent study abroad advisor.
-- **Career Navigator:** Profile-based university recommendations.
-- **ROI Calculator:** 10-year financial forecasting.
-- **Admission Predictor:** Probability scoring based on GPA and test scores.
-- **Loan Estimator:** Instant bank offer breakdowns.
+---
+
+## 📄 License
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+**Developed with ❤️ for Students by EduPath AI Team**
