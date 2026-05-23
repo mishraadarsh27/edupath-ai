@@ -1,4 +1,4 @@
-# EduPath AI 🎓🚀
+# EduPath AI 
 
 **EduPath AI** is a premium, AI-powered student assistant platform designed to simplify the journey of Indian students planning higher education abroad. It provides data-driven insights into university selection, financial ROI, and admission chances through an ultra-modern, responsive interface.
 
