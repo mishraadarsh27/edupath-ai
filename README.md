@@ -6,7 +6,7 @@
 
 ---
 
-## 🌟 Key Features
+##  Key Features
 
 - **🧠 AI Streaming Mentor**: A real-time intelligent counselor powered by Groq (Llama 3.3). It uses **RAG-lite** (Retrieval-Augmented Generation) to provide factual university recommendations from a curated database.
 - ** University Navigator**: Profile-based discovery with match-score algorithms covering the USA, UK, Canada, Germany, and Australia.
