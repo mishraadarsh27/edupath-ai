@@ -18,7 +18,7 @@
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **HTML5 & Vanilla CSS**: Custom-built design system with light-mode glassmorphism and bento-grid layouts.
@@ -33,14 +33,14 @@
 
 ---
 
-## 🚀 Live Deployment
+##  Live Deployment
 
 The application is deployed and live at:
 🔗 **[https://edupath-ai-nxm0.onrender.com](https://edupath-ai-nxm0.onrender.com)**
 
 ---
 
-## ⚙️ Local Development
+##  Local Development
 
 ### Prerequisites
 - Python 3.9+
