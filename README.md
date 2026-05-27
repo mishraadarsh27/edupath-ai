@@ -11,9 +11,9 @@
 - ** AI Streaming Mentor**: A real-time intelligent counselor powered by Groq (Llama 3.3). It uses **RAG-lite** (Retrieval-Augmented Generation) to provide factual university recommendations from a curated database.
 - ** University Navigator**: Profile-based discovery with match-score algorithms covering the USA, UK, Canada, Germany, and Australia.
 - ** Real-time ROI Analyzer**: 10-year financial forecasting to help students understand the true value of their international degree.
-- **✨ AI Profile Scan**: Instant data extraction from academic transcripts (PDF) using AI-powered OCR.
-- **🎯 Admission Predictor**: Probability scoring based on GPA, English proficiency, and work experience.
-- **🏦 Loan Gateway**: Instant eligibility checks and EMI comparisons between top Indian banks like SBI and HDFC.
+- ** AI Profile Scan**: Instant data extraction from academic transcripts (PDF) using AI-powered OCR.
+- ** Admission Predictor**: Probability scoring based on GPA, English proficiency, and work experience.
+- ** Loan Gateway**: Instant eligibility checks and EMI comparisons between top Indian banks like SBI and HDFC.
 - ** Referral System**: Integrated reward mechanism for students to invite friends and gain points.
 
 ---
