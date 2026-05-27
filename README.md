@@ -14,7 +14,7 @@
 - **✨ AI Profile Scan**: Instant data extraction from academic transcripts (PDF) using AI-powered OCR.
 - **🎯 Admission Predictor**: Probability scoring based on GPA, English proficiency, and work experience.
 - **🏦 Loan Gateway**: Instant eligibility checks and EMI comparisons between top Indian banks like SBI and HDFC.
-- **🎁 Referral System**: Integrated reward mechanism for students to invite friends and gain points.
+- ** Referral System**: Integrated reward mechanism for students to invite friends and gain points.
 
 ---
 
